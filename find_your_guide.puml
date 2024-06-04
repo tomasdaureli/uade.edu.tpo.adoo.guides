@@ -1,0 +1,204 @@
+@startuml find_your_guide
+!theme toy
+
+' Entitys
+
+abstract class Profile{
+    ' Attributes
+    - name: string
+    - lastName: string
+    - gender: Gender
+    - dni: string
+    - email: string
+    - phoneNumber: int
+    - user: string
+    - password: string
+    - historyTrips: Trip[]
+
+    ' Methods
+    + addTripToHistory(Trip trip): Trip[]
+}
+
+class Tourist<<Entity>>{
+    ' Methods
+    + addReview(Guide serviceGuide, Review review)
+}
+
+class Guide<<Entity>>{
+    ' Attributes
+    - credentialId: string
+    - photoId: string
+    - review: Review[]
+    - score: double
+    - trophies: Trophy[]
+    - booked: boolean
+
+    ' Methods
+    + acceptBook(Book book): void
+    + updateServices(ServiceGuideCity services): void
+    + verifyCredential(string credentialId): boolean
+    + addTrophy(Trophy trophy): Trophy[]
+    + addReview(Review review): Review[]
+    + calculateScore(Review[] reviews): double
+    + checkAvailabilty(Guide guide, date startDate, date endDate): boolean
+}
+
+enum Gender {
+    M
+    F
+}
+
+class Review<<Entity>>{
+    ' Attributes
+    - score: int
+    - comment: string
+}
+
+note right of Review::score
+    Puntaje de 1 a 5 estrellas
+end note
+
+class ServiceGuideCity<<Entity>>{
+    - guide: Guide
+    - service: Service
+    - city: City
+}
+
+class City<<Entity>>{
+    - country: string
+}
+
+class Service<<Entity>>{
+    - name: string
+    - type: ServiceType
+}
+
+enum ServiceType {
+    INDIVIDUAL
+    GROUP
+    TRANSLATION
+}
+
+class Trophy<<Entity>>{
+    - type: TrophyType
+}
+
+enum TrophyType {
+    SUCCESS
+    REVIEW
+}
+
+class Trip<<Entity>>{
+    - startDate: date
+    - endDate: date
+    - destiny: City
+}
+
+class Book<<Entity>>{
+    ' Atributtes
+    - trip: Trip
+    - tourist: Tourist
+    - serviceGuideCity: ServiceGuideCity
+    - signPayment: double
+    - totalAmount: double
+    ' - status: BookStatus
+    - status: IBookStatus
+
+    ' Methods
+    + addBook(Trip trip, Tourist tourist, ServiceGuideCity serviceGuideCity)
+    + calculateTotalAmount(): double
+    + changeStatus(IBookStatus status)
+    + sendGuideNotification(Book book)
+    + sendTouristNotification(Book book)
+}
+
+interface IBookStatus {
+    + sendTouristNotification(Book book)
+}
+
+class Pending {
+    ' Mehtods
+    + sendTouristNotification(Book book)
+}
+class Confirmed {
+    ' Mehtods
+    + sendTouristNotification(Book book)
+}
+class Cancelled {
+    ' Mehtods
+    + sendTouristNotification(Book book)
+}
+
+' enum BookStatus {
+'     PENDING
+'     CONFIRMED
+'     CANCELLED
+' }
+
+class Bill<<Entity>>{
+    - book: Book
+    - feeAmount: double
+}
+
+' Entity relations
+
+Profile <-- Tourist
+Profile <-- Guide
+Profile -- Gender
+Guide "1" *-- "*" ServiceGuideCity
+Guide "1" o-- "*" Review
+Guide "1" o-- "*" Trophy
+City "1" *-- "*" ServiceGuideCity
+Service "1" *-- "*" ServiceGuideCity
+Service -- ServiceType
+Book "*" o-- "1" ServiceGuideCity
+Book "*" --* "1" Tourist
+' Book -- BookStatus
+Book --> IBookStatus
+IBookStatus -- Pending
+IBookStatus -- Confirmed
+IBookStatus -- Cancelled
+Pending ..> Confirmed
+Confirmed ..> Cancelled
+Pending ..> Cancelled
+
+Bill "1" --* "1" Book
+Trophy -- TrophyType
+Trip "1" --* "1" Book
+Trip "1" o-- "1" City
+
+' Controllers
+
+class ServiceController{
+    ' Methods
+    + addService()
+    + updateService()
+
+}
+note top of ServiceController: Todos los metodos referidos a la creacion, modificacion de servicios
+
+class TripController{
+}
+note top of TripController: Todos los metodos referidos a la creacion, modificacion de viajes
+
+class BookController{
+    ' Methods
+    + createBook()
+    + updateBook()
+    + getBill()
+}
+note top of BookController: Todos los metodos referidos a la creacion, modificacion de reservas
+
+class UserController{
+    ' Methods
+    + createUser()
+    + verifyCredential()
+    + addReview()
+    + addTrophy()
+    + checkAvailabilty()
+    + calculateScore()
+    + addTripToHistory()
+}
+note top of UserController: Todos los metodos referidos a la creacion, modificacion de usuarios (guia y turista)
+
+@enduml

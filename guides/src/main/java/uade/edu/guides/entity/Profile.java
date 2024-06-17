@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public abstract class Profile {
 
+    private Long id;
     private String name;
     private String lastName;
     private Gender gender;

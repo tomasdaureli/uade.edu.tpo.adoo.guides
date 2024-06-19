@@ -1,29 +1,33 @@
-package uade.edu.guides.entity;
+package uade.edu.guides.domain;
 
-import java.util.List;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class Profile {
+public class CreateProfileDTO {
 
-    private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String lastName;
-    private Gender gender;
+    @NotNull
+    private GenderDTO gender;
+    @NotBlank
     private String dni;
+    @NotBlank
     private String email;
+    @NotBlank
     private String phoneNumber;
+    @NotBlank
     private String user;
+    @NotBlank
     private String password;
-    private List<Trip> historyTrips;
-    private IEstrategiaAutenticacion autenticacion;
 
 }

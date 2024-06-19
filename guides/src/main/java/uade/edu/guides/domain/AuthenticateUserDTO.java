@@ -1,4 +1,4 @@
-package uade.edu.guides.entity;
+package uade.edu.guides.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,14 +9,10 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Service {
+public class AuthenticateUserDTO {
 
-    private Long id;
+    private String email;
 
-    private String name;
-
-    private ServiceType type;
-
-    private Language language;
+    private String password;
 
 }

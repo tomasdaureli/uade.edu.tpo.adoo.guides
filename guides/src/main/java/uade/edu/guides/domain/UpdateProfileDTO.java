@@ -1,29 +1,23 @@
-package uade.edu.guides.entity;
-
-import java.util.List;
+package uade.edu.guides.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class Profile {
+public class UpdateProfileDTO {
 
-    private Long id;
     private String name;
     private String lastName;
-    private Gender gender;
+    private GenderDTO gender;
     private String dni;
     private String email;
     private String phoneNumber;
     private String user;
     private String password;
-    private List<Trip> historyTrips;
-    private IEstrategiaAutenticacion autenticacion;
 
 }

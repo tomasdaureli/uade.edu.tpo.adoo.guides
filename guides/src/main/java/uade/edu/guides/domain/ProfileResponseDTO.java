@@ -1,4 +1,4 @@
-package uade.edu.guides.entity;
+package uade.edu.guides.domain;
 
 import java.util.List;
 
@@ -6,24 +6,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class Profile {
+public class ProfileResponseDTO {
 
     private Long id;
     private String name;
     private String lastName;
-    private Gender gender;
+    private GenderDTO gender;
     private String dni;
     private String email;
     private String phoneNumber;
     private String user;
     private String password;
-    private List<Trip> historyTrips;
-    private IEstrategiaAutenticacion autenticacion;
+    private List<TripDTO> historyTrips;
 
 }

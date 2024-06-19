@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Bill {
 
-    private Book book;
+    public Book book;
 
     private Double feeAmount;
 

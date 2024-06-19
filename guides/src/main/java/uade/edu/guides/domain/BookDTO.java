@@ -1,7 +1,5 @@
 package uade.edu.guides.domain;
 
-import java.time.LocalDate;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +9,18 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TripDTO {
+public class BookDTO {
 
-    private LocalDate startDate;
+    private Long id;
 
-    private LocalDate endDate;
+    private TripDTO trip;
+
+    private TouristDTO tourist;
+
+    private Double signPayment;
+
+    private Double totalAmount;
+
+    private String status;
 
 }

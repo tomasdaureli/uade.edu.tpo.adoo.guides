@@ -1,11 +1,6 @@
 package uade.edu.guides.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,70 +10,61 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.persistence.EntityNotFoundException;
-import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.domain.CreateProfileDTO;
-import uade.edu.guides.domain.CreateServiceDTO;
 import uade.edu.guides.domain.ProfileResponseDTO;
-import uade.edu.guides.domain.TripDTO;
+import uade.edu.guides.domain.ReviewDTO;
+import uade.edu.guides.domain.TrophyDTO;
 import uade.edu.guides.domain.UpdateProfileDTO;
-import uade.edu.guides.entity.Book;
-import uade.edu.guides.entity.Guide;
-import uade.edu.guides.entity.Profile;
-import uade.edu.guides.entity.Review;
-import uade.edu.guides.entity.Trophy;
 import uade.edu.guides.service.ProfileService;
-import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("/profiles")
 public class ProfileController {
 
-    private ProfileService pService;
+    private ProfileService service;
 
     @GetMapping
-    public List<ProfileResponseDTO> getAllProfiles() {    
-        return pService.getAllProfiles();
+    public List<ProfileResponseDTO> getAllProfiles() {
+        return service.getAllProfiles();
     }
 
     @PostMapping
-    public ProfileResponseDTO createUser(@RequestBody CreateProfileDTO dto) {
-        return pService.createUser(dto);
+    public ProfileResponseDTO createUser(
+            @RequestBody CreateProfileDTO dto) {
+        return service.createUser(dto);
     }
-
 
     @GetMapping
-    public ProfileResponseDTO getProfileByDNI(@RequestParam String dni) {
-        return pService.getProfileByDNI(dni);
+    public ProfileResponseDTO getProfileByDNI(
+            @RequestParam String dni) {
+        return service.getProfileByDNI(dni);
     }
 
-  
     @PatchMapping("/{profileId}")
-    public ProfileResponseDTO updateProfile(@PathVariable Long profileId , @RequestBody UpdateProfileDTO dto) {
-        return pService.updateProfile(dto);
+    public ProfileResponseDTO updateProfile(
+            @PathVariable Long profileId,
+            @RequestBody UpdateProfileDTO dto) {
+        return service.updateProfile(profileId, dto);
     }
 
-    @PostMapping
-    public void addReview(@RequestBody Guide guide, @RequestBody Review review) {
-       pService.addReview(guide, review);
+    @PostMapping("{guideId}")
+    public void addReview(
+            @PathVariable Long guideId,
+            @RequestBody ReviewDTO review) {
+        service.addReview(guideId, review);
     }
 
-    @PostMapping
-    public void addTrophy(@RequestBody Guide guide, @RequestBody Trophy trophy) {
-       pService.addTrophy(guide, trophy); 
+    @PostMapping("{guideId}")
+    public void addTrophy(
+            @PathVariable Long guideId,
+            @RequestBody TrophyDTO trophy) {
+        service.addTrophy(guideId, trophy);
     }
 
-    
-    @GetMapping
-    public List<Trophy> getAllTrophies(@RequestParam  Guide guide) {
-        return pService.getAllTrophies(guide);
+    @GetMapping("/trophies/{guideId}")
+    public List<TrophyDTO> getAllTrophies(
+            @PathVariable Long guideId) {
+        return service.getAllTrophies(guideId);
     }
-    
-    @PostMapping
-    public List<TripDTO> addTripToHistory(@RequestBody TripDTO trip) {
-        return pService.addTripToHistory(trip);
-    }
-
-
 
 }

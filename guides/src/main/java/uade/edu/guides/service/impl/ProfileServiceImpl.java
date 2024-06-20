@@ -1,10 +1,8 @@
 package uade.edu.guides.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,13 +10,10 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.*;
-import uade.edu.guides.entity.Book;
 import uade.edu.guides.entity.Guide;
 import uade.edu.guides.entity.Profile;
 import uade.edu.guides.entity.Review;
-import uade.edu.guides.entity.Trophy;
 import uade.edu.guides.mapper.ProfileMapper;
-import uade.edu.guides.repository.BookRepository;
 import uade.edu.guides.repository.ProfileRepository;
 import uade.edu.guides.service.ProfileService;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
@@ -28,83 +23,58 @@ import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository repository;
-    private final BookRepository bookRepository;
     private final ProfileMapper profileMapper;
-    private static long count = 0;
+
+    // lo inyectamos aca, o en la entidad, no me hace sentido que este en los dos
+    // lugares
     private IEstrategiaAutenticacion estrategiaAutenticacion;
 
     @Override
-    public List<ProfileResponseDTO> getAllProfiles() {    
+    public List<ProfileResponseDTO> getAllProfiles() {
         List<Profile> listProfiles = repository.findAll();
 
         return listProfiles.stream()
-        .map(profile -> {
-            ProfileResponseDTO profileResponseDTO = new ProfileResponseDTO();
-            profileResponseDTO.setId(profile.getId());
-            profileResponseDTO.setName(profile.getName());
-            profileResponseDTO.setLastName(profile.getLastName());
-            profileResponseDTO.setDni(profile.getDni());
-            profileResponseDTO.setEmail(profile.getEmail());
-            profileResponseDTO.setPhoneNumber(profile.getPhoneNumber());
-            profileResponseDTO.setUser(profile.getUser());
-            profileResponseDTO.setGender(profileMapper.toGenderFromGenderDTO(profile.getGender()));
-            profileResponseDTO.setHistoryTrips(profileMapper.toListTripDTOFromListTrip(profile.getHistoryTrips()));
-
-            return profileResponseDTO;
-        })
-        .collect(Collectors.toList());
-}
+                .map(profileMapper::toProfileResponseDTO)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public ProfileResponseDTO createUser(CreateProfileDTO dto) {
+        Profile profile;
 
-        ProfileResponseDTO newProfile = new ProfileResponseDTO(count, dto.getName(), dto.getLastName(), dto.getGender(), dto.getDni(), dto.getEmail(), dto.getPhoneNumber(), dto.getUser(), dto.getPassword(),null);
-
-        Profile profile = profileMapper.toProfileEntity(profileMapper.toProfileResponseFromCreateProfileDTO(newProfile));
+        if (ProfileTypeDTO.GUIDE.equals(dto.getType())) {
+            profile = profileMapper.toGuide(dto);
+        } else {
+            profile = profileMapper.toTourist(dto);
+        }
 
         Profile savedProfile = repository.save(profile);
 
         return profileMapper.toProfileResponseDTO(savedProfile);
-
     }
 
     @Override
     public ProfileResponseDTO getProfileByDNI(String dni) {
-        List<Profile> listProfiles = repository.findAll();
-        
-        for (Profile p : listProfiles) {
-            if (p.getDni().equals(dni)) {
-                return profileMapper.toProfileResponseDTO(p);
-            }
-        }
-        throw new EntityNotFoundException("Perfil no encontrado para DNI: " + dni);
+        Profile profile = repository.findByDni(dni)
+                .orElseThrow(() -> new EntityNotFoundException("Perfil no encontrado para DNI: " + dni));
+
+        return profileMapper.toProfileResponseDTO(profile);
     }
 
-
     @Override
-    public ProfileResponseDTO updateProfile(UpdateProfileDTO dto) {
-        List<Profile> listProfiles = repository.findAll();
-        for (Profile p : listProfiles) {
-            if (p.getDni().equals(dto.getDni())) {
-                p.setEmail(dto.getEmail());
-                p.setGender(profileMapper.toGenderDTOFromGender(dto.getGender()));
-                p.setLastName(dto.getLastName());
-                p.setName(dto.getName());
-                p.setPassword(dto.getPassword());
-                p.setPhoneNumber(dto.getPhoneNumber());
-                p.setUser(dto.getUser());
+    public ProfileResponseDTO updateProfile(Long profileId, UpdateProfileDTO dto) {
+        Profile profile = repository.findById(profileId)
+                .orElseThrow(() -> new EntityNotFoundException("Perfil no encontrado"));
 
-                Profile updatedProfile = repository.save(p)
-                return profileMapper.toProfileResponseDTO(updatedProfile);
-            }
-        }
+        Profile savedProfile = repository.save(profileMapper.toProfileFromUpdateDTO(dto, profile));
 
+        return profileMapper.toProfileResponseDTO(savedProfile);
     }
 
     @Override
     public boolean verifyCredential(String credentialId) {
         Random random = new Random();
-        int randomNumber = random.nextInt(2); 
+        int randomNumber = random.nextInt(2);
         switch (randomNumber) {
             case 0:
                 System.out.println("Credencial válida");
@@ -118,51 +88,38 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public void addReview(Guide guide, Review review) {
-        guide.setReview(review);
+    public void addReview(Long guideId, ReviewDTO review) {
+        // TODO: Implementacion buscando al guia en la base de datos y asociando la
+        // review
     }
 
     @Override
-    public void addTrophy(Guide guide, Trophy trophy) {
-        guide.getTrophies().add(trophy);
+    public void addTrophy(Long guideId, TrophyDTO trophy) {
+        // TODO: Implementacion buscando al guia en la base de datos y asociando el
+        // trofeo
     }
 
     @Override
-    public List<Trophy> getAllTrophies(Guide guide) {
-        List<Profile> listProfiles = repository.findAll();
-        List<Trophy> trophies = new ArrayList<>();
-
-        for (Profile p : listProfiles) {
-            if (p instanceof Guide && p.getDni().equals(guide.getDni())) {
-                trophies.addAll(((Guide) p).getTrophies());
-            }
-        }
-
-        return trophies;
+    public List<TrophyDTO> getAllTrophies(Long guideId) {
+        // TODO: Implementacion buscando al guia en la base de datos y obteniendo los
+        // trofeos de ese guia en particular
+        throw new UnsupportedOperationException("Unimplemented method 'getAllTrophies'");
     }
-    
+
     @Override
     public boolean checkAvailability(Guide guide, Date startDate, Date endDate) {
-        List<Profile> listProfiles = repository.findAll();
-        List<Book> listBooks = bookRepository.findAll();
-
-        for (Profile p : listProfiles) {
-            if (p instanceof Guide && p.getDni().equals(guide.getDni())) {
-                for(Book b : listBooks) {
-                    
-                }
-            }
-        }
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'checkAvailability'");
     }
 
     @Override
     public double calculateScore(List<Review> reviews) {
 
-        if (reviews == null || reviews.isEmpty()) 
-            return 0.0; 
-        
+        if (reviews == null || reviews.isEmpty())
+            return 0.0;
+
         double totalScore = 0.0;
-        for (Review r : reviews){
+        for (Review r : reviews) {
             totalScore += r.getScore();
         }
 
@@ -184,8 +141,5 @@ public class ProfileServiceImpl implements ProfileService {
     public void cambiarEstrategiaAutenticacion(IEstrategiaAutenticacion estrategia) {
         this.estrategiaAutenticacion = estrategia;
     }
-
-    
-
 
 }

@@ -6,10 +6,7 @@ import java.util.Date;
 import uade.edu.guides.domain.*;
 import uade.edu.guides.entity.Guide;
 import uade.edu.guides.entity.Review;
-import uade.edu.guides.entity.Trip;
-import uade.edu.guides.entity.Trophy;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
-
 
 public interface ProfileService {
 
@@ -17,22 +14,26 @@ public interface ProfileService {
 
     ProfileResponseDTO createUser(CreateProfileDTO dto);
 
-    ProfileResponseDTO getProfileByDNI(String DNI);
+    ProfileResponseDTO getProfileByDNI(String dni);
 
-    ProfileResponseDTO updateProfile(UpdateProfileDTO dto);
+    ProfileResponseDTO updateProfile(Long profileId, UpdateProfileDTO dto);
 
     boolean verifyCredential(String credentialId);
 
-    void addReview(Guide guide,Review review);
+    void addReview(Long guideId, ReviewDTO review);
 
-    void addTrophy(Guide guide, Trophy trophy);
+    void addTrophy(Long guideId, TrophyDTO trophy);
 
-    List<Trophy> getAllTrophies(Guide guide);
+    List<TrophyDTO> getAllTrophies(Long guideId);
 
+    // haria este metodo privado
     boolean checkAvailability(Guide guide, Date startDate, Date endDate);
 
+    // haria este metodo privado
     double calculateScore(List<Review> reviews);
 
+    // haria este metodo privado o lo eliminaria directamente, pq se va a asociar
+    // directamente en la BD
     List<TripDTO> addTripToHistory(TripDTO trip);
 
     void autenticarUsuario(AuthenticateUserDTO dto);

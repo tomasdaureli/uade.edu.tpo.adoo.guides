@@ -14,4 +14,10 @@ public class Confirmed implements IBookStatus {
         throw new UnsupportedOperationException("Unimplemented method 'acceptBook'");
     }
 
+    @Override
+    public String getStatus() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStatus'");
+    }
+
 }

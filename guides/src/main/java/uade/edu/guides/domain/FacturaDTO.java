@@ -1,4 +1,4 @@
-package uade.edu.guides.entity;
+package uade.edu.guides.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,12 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bill {
+public class FacturaDTO {
 
-    private Book book;
+    private BookDTO reserva;
 
-    private Double feeAmount;
+    private TouristDTO turista;
+
+    private Double comision;
 
 }

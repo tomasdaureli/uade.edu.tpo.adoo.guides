@@ -6,4 +6,6 @@ public interface IBookStatus {
 
     void acceptBook(Book book);
 
+    String getStatus();
+
 }

@@ -29,5 +29,7 @@ public class CreateProfileDTO {
     private String user;
     @NotBlank
     private String password;
+    @NotNull
+    private ProfileTypeDTO type;
 
 }

@@ -1,4 +1,4 @@
-package uade.edu.guides.entity;
+package uade.edu.guides.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,8 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bill {
+public class TrophyDTO {
 
-    private Book book;
-
-    private Double feeAmount;
+    private TrophyTypeDTO type;
 
 }

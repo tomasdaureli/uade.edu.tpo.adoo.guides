@@ -23,5 +23,12 @@ public class ProfileResponseDTO {
     private String user;
     private String password;
     private List<TripDTO> historyTrips;
+    private String credentialId;
+    private String photoId;
+    private ReviewDTO review;
+    private Double score;
+    private List<TrophyDTO> trophies;
+    private Boolean booked;
+    private List<String> cities;
 
 }

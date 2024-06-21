@@ -20,5 +20,6 @@ public class Guide extends Profile {
     private List<Trophy> trophies;
     private Boolean booked;
     private List<String> cities;
+    private List<Service> services;
 
 }

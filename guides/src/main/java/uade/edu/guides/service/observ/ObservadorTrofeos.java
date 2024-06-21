@@ -1,16 +1,17 @@
-package uade.edu.guides.service.auth.observ;
+package uade.edu.guides.service.observ;
+
 import org.springframework.stereotype.Component;
 
-//import uade.edu.guides.domain.AuthenticateUserDTO;
-//import uade.edu.guides.service.auth.IAdapterAutenticacionExterna;
+import uade.edu.guides.entity.Guide;
+import uade.edu.guides.entity.Trophy;
 
 @Component
 public class ObservadorTrofeos implements IObserver {
 
     @Override
-    public void addTrophy(Guide dto, Trophy dto) {
+    public void addTrophy(Guide guideDto, Trophy trophyDto) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'autenticarUsuario'");
+        throw new UnsupportedOperationException("Unimplemented method 'addTrophy'");
     }
 
 }

@@ -3,22 +3,19 @@ package uade.edu.guides.service;
 import java.util.List;
 
 import uade.edu.guides.domain.*;
-import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
 public interface GuideService {
-    List<GuideDTO> getAllGuides();
 
-    GuideDTO updateServices(UpdateServiceDTO dto);
+    List<ProfileResponseDTO> getAllGuides();
+
+    ProfileResponseDTO updateServices(List<Long> servicesDto);
 
     boolean verifyCredential(String credentialId);
 
-    void addReview(AddReviewDTO dto);
+    void addReview(Long guideId, ReviewDTO review);
 
-    void addTrophy(AddTrophyDTO dto);
+    void addTrophy(Long guideId, TrophyDTO trophy);
 
     List<TrophyDTO> getAllTrophies(String guideId);
 
-    double calculateScore(List<ReviewDTO> reviews);
-
-    boolean checkAvailability(CheckAvailabilityDTO dto);
 }

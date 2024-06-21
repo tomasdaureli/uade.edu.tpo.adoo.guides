@@ -1,5 +1,7 @@
 package uade.edu.guides.entity;
 
-public class Tourist extends Profile {
+import uade.edu.guides.service.tourist.IAdapterPago;
 
+public class Tourist extends Profile {
+    private IAdapterPago adatperPago;
 }

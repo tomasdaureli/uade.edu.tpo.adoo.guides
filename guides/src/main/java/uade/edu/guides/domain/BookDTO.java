@@ -15,7 +15,7 @@ public class BookDTO {
 
     private TripDTO trip;
 
-    private TouristDTO tourist;
+    private ProfileResponseDTO tourist;
 
     private Double signPayment;
 

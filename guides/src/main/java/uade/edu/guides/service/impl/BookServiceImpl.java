@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.BookDTO;
 import uade.edu.guides.domain.FacturaDTO;
+import uade.edu.guides.domain.ProfileResponseDTO;
 import uade.edu.guides.domain.ServiceDTO;
-import uade.edu.guides.domain.TouristDTO;
 import uade.edu.guides.entity.Book;
 import uade.edu.guides.entity.IBookStatus;
 import uade.edu.guides.repository.BookRepository;
@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService {
     private final FacturaService facturaService;
 
     @Override
-    public BookDTO createBook(TouristDTO tourist, LocalDate startDate, LocalDate endDate, ServiceDTO service) {
+    public BookDTO createBook(ProfileResponseDTO tourist, LocalDate startDate, LocalDate endDate, ServiceDTO service) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createBook'");
     }

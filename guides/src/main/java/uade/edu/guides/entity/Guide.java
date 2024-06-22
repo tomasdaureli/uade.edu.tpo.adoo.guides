@@ -46,6 +46,6 @@ public class Guide extends Profile {
 
     @ManyToMany
     @JoinTable(name = "guide_services", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
-    private List<Service> services;
+    private List<TourismService> services;
 
 }

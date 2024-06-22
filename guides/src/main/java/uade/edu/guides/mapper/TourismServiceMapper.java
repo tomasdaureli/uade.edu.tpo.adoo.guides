@@ -7,16 +7,19 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import uade.edu.guides.domain.CreateServiceDTO;
+import uade.edu.guides.domain.ServiceDTO;
 import uade.edu.guides.domain.UpdateServiceDTO;
-import uade.edu.guides.entity.Service;
+import uade.edu.guides.entity.TourismService;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface ServiceMapper {
+public interface TourismServiceMapper {
 
     @Mapping(target = "id", ignore = true)
-    Service toServiceFromCreateDTO(CreateServiceDTO dto);
+    TourismService toServiceFromCreateDTO(CreateServiceDTO dto);
 
     @Mapping(target = "id", ignore = true)
-    Service toServiceFromUpdateDTO(UpdateServiceDTO dto, @MappingTarget Service service);
+    TourismService toServiceFromUpdateDTO(UpdateServiceDTO dto, @MappingTarget TourismService service);
+
+    ServiceDTO toServiceDTO(TourismService service);
 
 }

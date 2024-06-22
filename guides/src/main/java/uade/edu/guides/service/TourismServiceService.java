@@ -6,17 +6,15 @@ import uade.edu.guides.domain.CreateServiceDTO;
 import uade.edu.guides.domain.ServiceDTO;
 import uade.edu.guides.domain.UpdateServiceDTO;
 
-public interface ServiceService {
+public interface TourismServiceService {
 
     ServiceDTO createService(CreateServiceDTO request);
 
-    ServiceDTO updateService(UpdateServiceDTO request);
+    ServiceDTO updateService(Long serviceId, UpdateServiceDTO request);
 
     void deleteService(Long serviceId);
 
     ServiceDTO getServiceById(Long serviceId);
-
-    ServiceDTO getServiceByName(String serviceName);
 
     List<ServiceDTO> getAllServices();
 

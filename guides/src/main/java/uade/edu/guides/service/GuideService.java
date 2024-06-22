@@ -6,16 +6,16 @@ import uade.edu.guides.domain.*;
 
 public interface GuideService {
 
+    ProfileResponseDTO addAdditionalDataForGuide(Long guideId, GuideAdditionalDataDTO dto);
+
     List<ProfileResponseDTO> getAllGuides();
 
-    ProfileResponseDTO updateServices(List<Long> servicesDto);
-
-    boolean verifyCredential(String credentialId);
+    ProfileResponseDTO updateServices(Long guideId, List<Long> servicesDto);
 
     void addReview(Long guideId, ReviewDTO review);
 
     void addTrophy(Long guideId, TrophyDTO trophy);
 
-    List<TrophyDTO> getAllTrophies(String guideId);
+    List<TrophyDTO> getAllTrophies(Long guideId);
 
 }

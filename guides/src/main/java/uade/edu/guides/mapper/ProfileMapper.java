@@ -10,12 +10,16 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import uade.edu.guides.domain.CreateProfileDTO;
 import uade.edu.guides.domain.ProfileResponseDTO;
+import uade.edu.guides.domain.ReviewDTO;
 import uade.edu.guides.domain.TripDTO;
+import uade.edu.guides.domain.TrophyDTO;
 import uade.edu.guides.domain.UpdateProfileDTO;
 import uade.edu.guides.entity.Guide;
 import uade.edu.guides.entity.Profile;
+import uade.edu.guides.entity.Review;
 import uade.edu.guides.entity.Tourist;
 import uade.edu.guides.entity.Trip;
+import uade.edu.guides.entity.Trophy;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ProfileMapper {
@@ -28,9 +32,16 @@ public interface ProfileMapper {
 
     Tourist toTourist(CreateProfileDTO dto);
 
-    @Mapping(target = "id", ignore = true)
+    TrophyDTO toTrophyDTO(Trophy trophy);
+
     ProfileResponseDTO toProfileResponseDTO(Profile profile);
 
+    ProfileResponseDTO toProfileResponseDTOFromGuide(Guide guide);
+
     Profile toProfileFromUpdateDTO(UpdateProfileDTO dto, @MappingTarget Profile profile);
+
+    Review toReview(ReviewDTO dto);
+
+    Trophy toTrophy(TrophyDTO dto);
 
 }

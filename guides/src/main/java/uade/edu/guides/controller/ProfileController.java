@@ -7,65 +7,76 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.CreateProfileDTO;
+import uade.edu.guides.domain.GuideAdditionalDataDTO;
 import uade.edu.guides.domain.ProfileResponseDTO;
 import uade.edu.guides.domain.ReviewDTO;
 import uade.edu.guides.domain.TrophyDTO;
 import uade.edu.guides.domain.UpdateProfileDTO;
+import uade.edu.guides.service.GuideService;
 import uade.edu.guides.service.ProfileService;
 
 @RestController
 @RequestMapping("/profiles")
+@RequiredArgsConstructor
 public class ProfileController {
 
-    private ProfileService service;
+    private final ProfileService profileService;
+
+    private final GuideService guideService;
 
     @GetMapping
     public List<ProfileResponseDTO> getAllProfiles() {
-        return service.getAllProfiles();
+        return profileService.getAllProfiles();
     }
 
     @PostMapping
     public ProfileResponseDTO createUser(
             @RequestBody CreateProfileDTO dto) {
-        return service.createUser(dto);
+        return profileService.createUser(dto);
     }
-
-    // No le veo mucho sentido a este endpoint
-    // @GetMapping
-    // public ProfileResponseDTO getProfileByDNI(
-    // @RequestParam String dni) {
-    // return service.getProfileByDNI(dni);
-    // }
 
     @PatchMapping("/{profileId}")
     public ProfileResponseDTO updateProfile(
             @PathVariable Long profileId,
             @RequestBody UpdateProfileDTO dto) {
-        return service.updateProfile(profileId, dto);
+        return profileService.updateProfile(profileId, dto);
     }
 
-    @PostMapping("/reviews/{guideId}")
+    @GetMapping("/guides")
+    public List<ProfileResponseDTO> getAllGuides() {
+        return guideService.getAllGuides();
+    }
+
+    @PatchMapping("/guides/{guideId}")
+    public ProfileResponseDTO addAdditionalDataForGuide(
+            @PathVariable Long guideId,
+            @Valid @RequestBody GuideAdditionalDataDTO dto) {
+        return guideService.addAdditionalDataForGuide(guideId, dto);
+    }
+
+    @PostMapping("/guides/reviews/{guideId}")
     public void addReview(
             @PathVariable Long guideId,
             @RequestBody ReviewDTO review) {
-        service.addReview(guideId, review);
+        guideService.addReview(guideId, review);
     }
 
-    @PostMapping("/trophies/{guideId}")
+    @PostMapping("/guides/trophies/{guideId}")
     public void addTrophy(
             @PathVariable Long guideId,
             @RequestBody TrophyDTO trophy) {
-        service.addTrophy(guideId, trophy);
+        guideService.addTrophy(guideId, trophy);
     }
 
-    @GetMapping("/trophies/{guideId}")
+    @GetMapping("/guides/trophies/{guideId}")
     public List<TrophyDTO> getAllTrophies(
             @PathVariable Long guideId) {
-        return service.getAllTrophies(guideId);
+        return guideService.getAllTrophies(guideId);
     }
 
 }

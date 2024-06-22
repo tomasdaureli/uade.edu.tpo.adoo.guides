@@ -19,6 +19,8 @@ import uade.edu.guides.mapper.ProfileMapper;
 import uade.edu.guides.repository.ProfileRepository;
 import uade.edu.guides.repository.TourismServiceRepository;
 import uade.edu.guides.service.GuideService;
+import uade.edu.guides.service.credent.IAdapterIA;
+import uade.edu.guides.service.observ.IObserver;
 
 @Slf4j
 @Service
@@ -31,7 +33,9 @@ public class GuideServiceImpl implements GuideService {
 
     private final ProfileMapper mapper;
 
-    private static final String PROFILE_TYPE = "guide";
+    private final IAdapterIA adapterIa;
+
+    private List<IObserver> listObservers;
 
     @Override
     public ProfileResponseDTO addAdditionalDataForGuide(Long guideId, GuideAdditionalDataDTO dto) {
@@ -91,21 +95,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     public void addTrophy(Long guideId, TrophyDTO trophyDto) {
-        Guide guide = profileRepository.findByIdAndProfileType(guideId)
-                .orElseThrow(GuideNotFoundException::new);
-
-        Trophy newTrophy = mapper.toTrophy(trophyDto);
-
-        List<Trophy> trophies = guide.getTrophies();
-
-        if (trophies == null) {
-            trophies = new ArrayList<>();
-            guide.setTrophies(trophies);
-        }
-
-        trophies.add(newTrophy);
-
-        profileRepository.save(guide);
+        listObservers.forEach(o -> o.addTrophyGuide(guideId, trophyDto));
     }
 
     public List<TrophyDTO> getAllTrophies(Long guideId) {
@@ -119,19 +109,8 @@ public class GuideServiceImpl implements GuideService {
                 .collect(Collectors.toList());
     }
 
-    private Boolean verifyCredential(String credentialId) {
-        Random random = new Random();
-        int randomNumber = random.nextInt(2);
-        switch (randomNumber) {
-            case 0:
-                log.info("Credencial válida: {}", credentialId);
-                return true;
-            case 1:
-                log.info("Credencial inválida: {}", credentialId);
-                return false;
-            default:
-                throw new IllegalStateException("Número aleatorio fuera de rango");
-        }
+    public Boolean verifyCredential(String credentialId) {
+        return adapterIa.verifyCredential(credentialId);
     }
 
     private Double calculateScore(List<Review> reviews) {
@@ -144,6 +123,16 @@ public class GuideServiceImpl implements GuideService {
         }
 
         return totalScore;
+    }
+
+    @Override
+    public void attach(IObserver observer) {
+        listObservers.add(observer);
+    }
+
+    @Override
+    public void detach(IObserver observer) {
+        listObservers.remove(observer);
     }
 
 }

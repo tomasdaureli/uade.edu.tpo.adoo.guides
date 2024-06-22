@@ -6,11 +6,11 @@ import uade.edu.guides.domain.*;
 
 public interface GuideService {
 
+    ProfileResponseDTO addAdditionalDataForGuide(Long guideId, GuideAdditionalDataDTO dto);
+
     List<ProfileResponseDTO> getAllGuides();
 
-    ProfileResponseDTO updateServices(List<Long> servicesDto, long guideID);
-
-    boolean verifyCredential(Long credentialId);
+    ProfileResponseDTO updateServices(Long guideId, List<Long> servicesDto);
 
     void addReview(Long guideId, ReviewDTO review);
 

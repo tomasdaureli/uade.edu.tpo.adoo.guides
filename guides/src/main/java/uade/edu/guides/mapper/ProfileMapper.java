@@ -10,11 +10,13 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import uade.edu.guides.domain.CreateProfileDTO;
 import uade.edu.guides.domain.ProfileResponseDTO;
+import uade.edu.guides.domain.ReviewDTO;
 import uade.edu.guides.domain.TripDTO;
 import uade.edu.guides.domain.TrophyDTO;
 import uade.edu.guides.domain.UpdateProfileDTO;
 import uade.edu.guides.entity.Guide;
 import uade.edu.guides.entity.Profile;
+import uade.edu.guides.entity.Review;
 import uade.edu.guides.entity.Tourist;
 import uade.edu.guides.entity.Trip;
 import uade.edu.guides.entity.Trophy;
@@ -32,9 +34,14 @@ public interface ProfileMapper {
 
     TrophyDTO toTrophyDTO(Trophy trophy);
 
-    @Mapping(target = "id", ignore = true)
     ProfileResponseDTO toProfileResponseDTO(Profile profile);
 
+    ProfileResponseDTO toProfileResponseDTOFromGuide(Guide guide);
+
     Profile toProfileFromUpdateDTO(UpdateProfileDTO dto, @MappingTarget Profile profile);
+
+    Review toReview(ReviewDTO dto);
+
+    Trophy toTrophy(TrophyDTO dto);
 
 }

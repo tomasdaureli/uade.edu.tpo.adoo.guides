@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "services")
-public class Service {
+public class TourismService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

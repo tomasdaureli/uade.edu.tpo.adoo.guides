@@ -31,19 +31,19 @@ public class BookController {
         return service.getBookById(bookId);
     }
 
-    @PatchMapping("/{bookId}")
-    public void aceptBook(
+    @PatchMapping("/accept/{bookId}")
+    public void acceptBook(
             @PathVariable Long bookId) {
         service.acceptBook(bookId);
     }
 
-    @PatchMapping("/{bookId}")
+    @PatchMapping("/cancel/{bookId}")
     public void cancelBook(
             @PathVariable Long bookId) {
         service.cancelBook(bookId);
     }
 
-    @GetMapping("/{bookId}")
+    @GetMapping("/{bookId}/bill")
     public FacturaDTO getBillByBook(
             @PathVariable Long bookId) {
         return service.getFacturaByBookId(bookId);

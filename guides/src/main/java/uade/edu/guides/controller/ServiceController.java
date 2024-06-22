@@ -46,13 +46,8 @@ public class ServiceController {
     }
 
     @GetMapping
-    public ServiceDTO getServiceByName(
-            @RequestParam String serviceName) {
-        return service.getServiceByName(serviceName);
-    }
-
-    @GetMapping
-    public List<ServiceDTO> getAllServices() {
+    public List<ServiceDTO> getAllServices(
+            @RequestParam(required = false) String serviceName) {
         return service.getAllServices();
     }
 

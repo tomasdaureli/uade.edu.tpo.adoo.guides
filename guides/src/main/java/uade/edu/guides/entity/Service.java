@@ -1,5 +1,8 @@
 package uade.edu.guides.entity;
 
+import java.util.List;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,14 +12,22 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name = "services")
 public class Service {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
     private ServiceType type;
 
+    @Enumerated(EnumType.STRING)
     private Language language;
+
+    @ManyToMany(mappedBy = "services")
+    private List<Guide> guides;
 
 }

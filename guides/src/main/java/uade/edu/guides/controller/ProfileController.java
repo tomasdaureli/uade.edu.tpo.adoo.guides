@@ -34,11 +34,12 @@ public class ProfileController {
         return service.createUser(dto);
     }
 
-    @GetMapping
-    public ProfileResponseDTO getProfileByDNI(
-            @RequestParam String dni) {
-        return service.getProfileByDNI(dni);
-    }
+    // No le veo mucho sentido a este endpoint
+    // @GetMapping
+    // public ProfileResponseDTO getProfileByDNI(
+    // @RequestParam String dni) {
+    // return service.getProfileByDNI(dni);
+    // }
 
     @PatchMapping("/{profileId}")
     public ProfileResponseDTO updateProfile(
@@ -47,14 +48,14 @@ public class ProfileController {
         return service.updateProfile(profileId, dto);
     }
 
-    @PostMapping("{guideId}")
+    @PostMapping("/reviews/{guideId}")
     public void addReview(
             @PathVariable Long guideId,
             @RequestBody ReviewDTO review) {
         service.addReview(guideId, review);
     }
 
-    @PostMapping("{guideId}")
+    @PostMapping("/trophies/{guideId}")
     public void addTrophy(
             @PathVariable Long guideId,
             @RequestBody TrophyDTO trophy) {

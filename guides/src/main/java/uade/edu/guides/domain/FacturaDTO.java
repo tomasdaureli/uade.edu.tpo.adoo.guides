@@ -13,7 +13,7 @@ public class FacturaDTO {
 
     private BookDTO reserva;
 
-    private TouristDTO turista;
+    private ProfileResponseDTO turista;
 
     private Double comision;
 

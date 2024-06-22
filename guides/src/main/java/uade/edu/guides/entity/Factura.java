@@ -1,20 +1,31 @@
 package uade.edu.guides.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Entity(name = "facturas")
 public class Factura {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long nroFactura;
+
+    @ManyToOne
+    @JoinColumn(name = "reserva_id")
     private Book reserva;
 
+    @ManyToOne
+    @JoinColumn(name = "profile_id")
     private Tourist turista;
 
     private Double comision;
+
+    private Double total;
 
 }

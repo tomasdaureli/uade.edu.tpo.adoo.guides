@@ -7,14 +7,16 @@ import uade.edu.guides.domain.NotificacionDTO;
 
 @Component
 @RequiredArgsConstructor
-public abstract class Notificador {
+public class Notificador {
 
-    private final IEstrategiaNotificacion notif;
+    private IEstrategiaNotificacion notif;
 
     public void enviarNotificacion(NotificacionDTO notificacionDTO) {
+        notif.enviarNotificacion(notificacionDTO);
     }
 
     public void cambiarEstrategiaNotif(IEstrategiaNotificacion estrategia) {
+        this.notif = estrategia;
     }
 
 }

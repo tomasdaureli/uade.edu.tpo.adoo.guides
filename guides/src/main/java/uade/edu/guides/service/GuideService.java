@@ -8,14 +8,14 @@ public interface GuideService {
 
     List<ProfileResponseDTO> getAllGuides();
 
-    ProfileResponseDTO updateServices(List<Long> servicesDto);
+    ProfileResponseDTO updateServices(List<Long> servicesDto, long guideID);
 
-    boolean verifyCredential(String credentialId);
+    boolean verifyCredential(Long credentialId);
 
     void addReview(Long guideId, ReviewDTO review);
 
     void addTrophy(Long guideId, TrophyDTO trophy);
 
-    List<TrophyDTO> getAllTrophies(String guideId);
+    List<TrophyDTO> getAllTrophies(Long guideId);
 
 }

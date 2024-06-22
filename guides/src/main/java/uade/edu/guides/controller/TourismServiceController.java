@@ -3,11 +3,12 @@ package uade.edu.guides.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.CreateServiceDTO;
 import uade.edu.guides.domain.ServiceDTO;
 import uade.edu.guides.domain.UpdateServiceDTO;
-import uade.edu.guides.service.ServiceService;
+import uade.edu.guides.service.TourismServiceService;
 
 import java.util.List;
 
@@ -22,13 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/services")
 @RequiredArgsConstructor
-public class ServiceController {
+public class TourismServiceController {
 
-    private final ServiceService service;
+    private final TourismServiceService service;
 
     @PostMapping
     public ServiceDTO addService(
-            @RequestBody CreateServiceDTO request) {
+            @Valid @RequestBody CreateServiceDTO request) {
         return service.createService(request);
     }
 
@@ -36,7 +37,7 @@ public class ServiceController {
     public ServiceDTO updateService(
             @PathVariable Long serviceId,
             @RequestBody UpdateServiceDTO request) {
-        return service.updateService(request);
+        return service.updateService(serviceId, request);
     }
 
     @DeleteMapping("/{serviceId}")
@@ -46,13 +47,8 @@ public class ServiceController {
     }
 
     @GetMapping
-    public ServiceDTO getServiceByName(
-            @RequestParam String serviceName) {
-        return service.getServiceByName(serviceName);
-    }
-
-    @GetMapping
-    public List<ServiceDTO> getAllServices() {
+    public List<ServiceDTO> getAllServices(
+            @RequestParam(required = false) String serviceName) {
         return service.getAllServices();
     }
 

@@ -1,5 +1,7 @@
 package uade.edu.guides.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,18 +12,22 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "trophies")
-public class Trophy {
+@Entity(name = "services")
+public class TourismService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private TrophyType type;
+    private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "profile_id")
-    private Guide guide;
+    @Enumerated(EnumType.STRING)
+    private ServiceType type;
+
+    @Enumerated(EnumType.STRING)
+    private Language language;
+
+    @ManyToMany(mappedBy = "services")
+    private List<Guide> guides;
 
 }

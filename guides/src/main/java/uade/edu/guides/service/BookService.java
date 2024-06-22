@@ -5,14 +5,14 @@ import java.util.List;
 
 import uade.edu.guides.domain.BookDTO;
 import uade.edu.guides.domain.FacturaDTO;
+import uade.edu.guides.domain.ProfileResponseDTO;
 import uade.edu.guides.domain.ServiceDTO;
-import uade.edu.guides.domain.TouristDTO;
 import uade.edu.guides.entity.Book;
 import uade.edu.guides.entity.IBookStatus;
 
 public interface BookService {
 
-    BookDTO createBook(TouristDTO tourist, LocalDate startDate, LocalDate endDate, ServiceDTO service);
+    BookDTO createBook(ProfileResponseDTO tourist, LocalDate startDate, LocalDate endDate, ServiceDTO service);
 
     void acceptBook(Long id);
 

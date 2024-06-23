@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.NotificacionDTO;
+import uade.edu.guides.service.notifications.IAdapterPushNotification;
 import uade.edu.guides.service.notifications.IEstrategiaNotificacion;
 import uade.edu.guides.service.notifications.adapters.FireBase;
 
@@ -11,11 +12,11 @@ import uade.edu.guides.service.notifications.adapters.FireBase;
 @RequiredArgsConstructor
 public class NotificacionPush implements IEstrategiaNotificacion {
 
-    private final FireBase fireBase;
+    private final IAdapterPushNotification pushNotif;
 
     @Override
     public void enviarNotificacion(NotificacionDTO notificacion) {
-        fireBase.enviarNotificacion(notificacion);
+        pushNotif.enviarNotificacion(notificacion);
     }
 
 }

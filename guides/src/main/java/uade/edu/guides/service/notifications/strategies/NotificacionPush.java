@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.NotificacionDTO;
 import uade.edu.guides.service.notifications.IAdapterPushNotification;
 import uade.edu.guides.service.notifications.IEstrategiaNotificacion;
-import uade.edu.guides.service.notifications.adapters.FireBase;
 
 @Component
 @RequiredArgsConstructor

@@ -3,12 +3,10 @@ package uade.edu.guides.service.state;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import uade.edu.guides.domain.NotificacionDTO;
 import uade.edu.guides.entity.Book;
 import uade.edu.guides.service.notifications.Notificador;
 
-@Slf4j
 @Component("confirmedStatus")
 @RequiredArgsConstructor
 public class Confirmed implements IBookStatus {

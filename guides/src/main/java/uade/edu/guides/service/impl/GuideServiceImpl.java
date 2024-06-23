@@ -3,14 +3,12 @@ package uade.edu.guides.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import uade.edu.guides.domain.*;
 import uade.edu.guides.entity.*;
 import uade.edu.guides.exception.GuideNotFoundException;
@@ -22,7 +20,6 @@ import uade.edu.guides.service.GuideService;
 import uade.edu.guides.service.credent.IAdapterIA;
 import uade.edu.guides.service.observ.IObserver;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GuideServiceImpl implements GuideService {

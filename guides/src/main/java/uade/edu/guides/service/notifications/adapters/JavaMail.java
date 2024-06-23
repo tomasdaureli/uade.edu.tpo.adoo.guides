@@ -13,8 +13,8 @@ public class JavaMail implements IAdapterMail {
     @Override
     public void enviarNotificacion(NotificacionDTO notificacion) {
         log.info("Se envio una notificacion a " + notificacion.getReceptor().getName() + " "
-                + notificacion.getReceptor().getLastName() + "\n Asunto: " + notificacion.getDescripcion()
-                + "\nNotificacion enviada via JavaMail");
-    }
+        + notificacion.getReceptor().getLastName() + "\n Correo Electronico: " + notificacion.getReceptor().getEmail() +  "\n Asunto: " + notificacion.getDescripcion()
+        + "\nNotificacion enviada via JavaMail");
+}
 
 }

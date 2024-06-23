@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.AuthenticateUserDTO;
+import uade.edu.guides.domain.ProfileResponseDTO;
 import uade.edu.guides.service.auth.IAdapterAutenticacionExterna;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
@@ -16,10 +17,10 @@ public class AutenticacionExterna implements IEstrategiaAutenticacion {
     private IAdapterAutenticacionExterna autenticacionExterna;
 
     @Override
-    public void autenticarUsuario(AuthenticateUserDTO dto) {
+    public void autenticarUsuario(ProfileResponseDTO dto) {
         System.out.println("Autenticacion Externa: ");
         Random random = new Random();
-        int randomNumber = random.nextInt(2); 
+        int randomNumber = random.nextInt(2);
         switch (randomNumber) {
             case 0:
                 System.out.println("Autenticacion Completada!");

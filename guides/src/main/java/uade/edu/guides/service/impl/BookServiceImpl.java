@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -41,9 +42,9 @@ public class BookServiceImpl implements BookService {
     private final IBookStatus cancelledStatus;
 
     private final Notificador notificador;
-    private static final Double signPercent = 0.10; 
-    private static final Double recharge = 0.5; //50%
-
+    private static final Double SIGN_PERCENT = 0.10; 
+    private static final Double RECHARGE = 0.5; //50%
+    private static final Long DAYTS_TO_REVIEW = 3L;
 
     @Override
     public void changeStatus(Book book, IBookStatus status) {
@@ -76,7 +77,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private Double calculateSign(Trip trip){
-        return trip.getService().getPrice()*signPercent;
+        return trip.getService().getPrice()*SIGN_PERCENT;
     }
 
     private Trip buildTrip(CreateBookDTO dto) {
@@ -153,7 +154,7 @@ public class BookServiceImpl implements BookService {
         Book book = repository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
 
-        if(touristCancell(profileId))
+        if(Boolean.TRUE.equals(touristCancell(profileId)))
         {
             facturaService.updateFactura(book, addRecharge(book));
         }
@@ -176,7 +177,7 @@ public class BookServiceImpl implements BookService {
         }
         if(book.getStatus().equals("CONFIRMED"))
         {
-            amountRecharge = recharge;
+            amountRecharge = RECHARGE;
         }
 
         return amountRecharge;
@@ -212,6 +213,26 @@ public class BookServiceImpl implements BookService {
     @Override
     public void sendTouristNotification(Book book,IBookStatus status) {
         status.sendTouristNotification(book);
+    }
+
+    @Scheduled(cron = "0 0 10 * * ?")
+    private void sendTouristNotificationAfterEndDate(){
+        LocalDate currentDate = LocalDate.now();
+        List<Book> endedBooks = repository.findByTripEndDateBefore(currentDate);
+        for(Book b : endedBooks){
+            if(currentDate.minusDays(DAYTS_TO_REVIEW).isEqual(b.getTrip().getEndDate()))
+            {
+                NotificacionDTO notif = new NotificacionDTO();
+                notif.setReceptor(b.getTourist());
+                notif.setDescripcion("Califique al Guia " + b.getTrip().getGuide().getName() + " " + b.getTrip().getGuide().getLastName() + "\nPor el Servicio : " + b.getTrip().getService().getName());
+                notificador.cambiarEstrategiaNotif(new NotificacionMail(new JavaMail()));
+                notificador.enviarNotificacion(notif);
+                notificador.cambiarEstrategiaNotif(new NotificacionPush(new FireBase()));
+                notificador.enviarNotificacion(notif);
+            }
+            
+        }
+
     }
 
 

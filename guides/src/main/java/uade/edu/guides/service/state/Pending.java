@@ -38,7 +38,6 @@ public class Pending implements IBookStatus {
     @Override
     public void cancelBook(Book book) {
         book.setStatus("CANCELLED");
-        int i = 0;
         
     }
 

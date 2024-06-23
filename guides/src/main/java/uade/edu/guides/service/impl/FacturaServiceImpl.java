@@ -49,6 +49,14 @@ public class FacturaServiceImpl implements FacturaService {
 
     }
 
+    @Override
+    public void updateFactura(Book book, Double recharge) {
+        Factura factura = repository.findByBook(book).orElseThrow(FacturaNotFoundException::new);
+
+        factura.setTotal(factura.getTotal()*recharge);
+        repository.save(factura);
+    }
+
     
 
 }

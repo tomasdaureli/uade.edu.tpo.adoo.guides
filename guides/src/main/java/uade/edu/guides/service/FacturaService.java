@@ -11,4 +11,6 @@ public interface FacturaService {
 
     void createFactura(Book book,Tourist tourist);
 
+    void updateFactura(Book book,Double recharge);
+
 }

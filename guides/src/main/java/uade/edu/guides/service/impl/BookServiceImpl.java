@@ -155,7 +155,7 @@ public class BookServiceImpl implements BookService {
 
         if(touristCancell(profileId))
         {
-            addRecharge(book);
+            facturaService.updateFactura(book, addRecharge(book));
         }
         changeStatus(book, cancelledStatus);
 

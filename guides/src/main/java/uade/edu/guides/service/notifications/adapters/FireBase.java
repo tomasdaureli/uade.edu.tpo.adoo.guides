@@ -12,7 +12,9 @@ public class FireBase implements IAdapterPushNotification {
 
     @Override
     public void enviarNotificacion(NotificacionDTO notificacion) {
-        log.info("Se envio una notificacion a " + notificacion.getReceptor().getName() + " " + notificacion.getReceptor().getLastName() + "\n Asunto: " + notificacion.getDescripcion() + "\nNotificacion enviada via FireBase");
+        log.info("Se envio una notificacion a " + notificacion.getReceptor().getName() + " "
+                + notificacion.getReceptor().getLastName() + "\n Asunto: " + notificacion.getDescripcion()
+                + "\nNotificacion enviada via FireBase");
     }
 
 }

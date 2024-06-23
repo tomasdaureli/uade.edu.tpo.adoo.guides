@@ -22,7 +22,7 @@ public class ObservadorTrofeos implements IObserver {
 
     @Override
     public void addTrophyGuide(Long guideId, TrophyDTO trophyDto) {
-       Guide guide = profileRepository.findByIdAndProfileType(guideId)
+        Guide guide = profileRepository.findGuideById(guideId)
                 .orElseThrow(GuideNotFoundException::new);
 
         Trophy newTrophy = mapper.toTrophy(trophyDto);

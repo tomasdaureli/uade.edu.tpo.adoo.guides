@@ -1,6 +1,7 @@
 package uade.edu.guides.service.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -137,6 +138,22 @@ public class BookServiceImpl implements BookService {
         changeStatus(book, cancelledStatus);
 
         repository.save(book);
+    }
+
+    @Override
+    public List<BookDTO> getBooksByTourist(Long touristId) {
+        Tourist tourist = profileRepository.findTouristById(touristId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        List<Book> books = repository.findByTourist(tourist);
+
+        if (!books.isEmpty()) {
+            return books.stream()
+                    .map(mapper::toBookDTO)
+                    .toList();
+        }
+
+        return new ArrayList<>();
     }
 
     @Override

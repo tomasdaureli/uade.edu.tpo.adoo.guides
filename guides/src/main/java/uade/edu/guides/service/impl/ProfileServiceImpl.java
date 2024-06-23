@@ -1,6 +1,5 @@
 package uade.edu.guides.service.impl;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.*;
-import uade.edu.guides.entity.Guide;
 import uade.edu.guides.entity.Profile;
 import uade.edu.guides.exception.ProfileNotFoundException;
 import uade.edu.guides.mapper.ProfileMapper;
@@ -71,11 +69,4 @@ public class ProfileServiceImpl implements ProfileService {
     public void cambiarEstrategiaAutenticacion(IEstrategiaAutenticacion estrategia) {
         this.estrategiaAutenticacion = estrategia;
     }
-
-    @Override
-    public Boolean checkAvailability(Guide guide, Date startDate, Date endDate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'checkAvailability'");
-    }
-
 }

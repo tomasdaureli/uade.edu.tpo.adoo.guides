@@ -3,23 +3,12 @@ package uade.edu.guides.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-import uade.edu.guides.domain.CreateProfileDTO;
-import uade.edu.guides.domain.ProfileResponseDTO;
-import uade.edu.guides.domain.ReviewDTO;
-import uade.edu.guides.domain.TripDTO;
-import uade.edu.guides.domain.TrophyDTO;
-import uade.edu.guides.domain.UpdateProfileDTO;
-import uade.edu.guides.entity.Guide;
-import uade.edu.guides.entity.Profile;
-import uade.edu.guides.entity.Review;
-import uade.edu.guides.entity.Tourist;
-import uade.edu.guides.entity.Trip;
-import uade.edu.guides.entity.Trophy;
+import uade.edu.guides.domain.*;
+import uade.edu.guides.entity.*;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ProfileMapper {
@@ -43,5 +32,7 @@ public interface ProfileMapper {
     Review toReview(ReviewDTO dto);
 
     Trophy toTrophy(TrophyDTO dto);
+
+    Guide toGuideFromAdditionalDataDTO(GuideAdditionalDataDTO dto, @MappingTarget Guide guide);
 
 }

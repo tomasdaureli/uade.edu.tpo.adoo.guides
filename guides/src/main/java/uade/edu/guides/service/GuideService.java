@@ -10,7 +10,7 @@ public interface GuideService {
 
     List<ProfileResponseDTO> getAllGuides();
 
-    ProfileResponseDTO updateServices(Long guideId, List<Long> servicesDto);
+    ProfileResponseDTO updateServices(Long guideId, GuideUpdateServicesDTO servicesDto);
 
     void addReview(Long guideId, ReviewDTO review);
 

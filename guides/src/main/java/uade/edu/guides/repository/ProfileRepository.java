@@ -10,12 +10,16 @@ import org.springframework.stereotype.Repository;
 
 import uade.edu.guides.entity.Guide;
 import uade.edu.guides.entity.Profile;
+import uade.edu.guides.entity.Tourist;
 
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query("SELECT g FROM Guide g WHERE g.id = :id AND TYPE(g) = Guide")
-    Optional<Guide> findByIdAndProfileType(@Param("id") Long id);
+    Optional<Guide> findGuideById(@Param("id") Long id);
+
+    @Query("SELECT t FROM Tourist t WHERE t.id = :id AND TYPE(t) = Tourist")
+    Optional<Tourist> findTouristById(@Param("id") Long id);
 
     @Query("SELECT g FROM Guide g WHERE TYPE(g) = Guide")
     List<Guide> findByProfileType();

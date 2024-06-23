@@ -24,6 +24,14 @@ public class Trip {
     private LocalDate endDate;
 
     @ManyToOne
+    @JoinColumn(name = "service_id")
+    private TourismService service;
+
+    @ManyToOne
+    @JoinColumn(name = "guide_id")
+    private Guide guide;
+
+    @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 

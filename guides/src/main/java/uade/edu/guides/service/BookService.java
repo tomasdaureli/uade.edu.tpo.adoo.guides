@@ -1,22 +1,20 @@
 package uade.edu.guides.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import uade.edu.guides.domain.BookDTO;
+import uade.edu.guides.domain.CreateBookDTO;
 import uade.edu.guides.domain.FacturaDTO;
-import uade.edu.guides.domain.ProfileResponseDTO;
-import uade.edu.guides.domain.ServiceDTO;
 import uade.edu.guides.entity.Book;
-import uade.edu.guides.entity.IBookStatus;
+import uade.edu.guides.service.state.IBookStatus;
 
 public interface BookService {
 
-    BookDTO createBook(ProfileResponseDTO tourist, LocalDate startDate, LocalDate endDate, ServiceDTO service);
+    BookDTO createBook(CreateBookDTO dto);
 
     void acceptBook(Long id);
 
-    Book changeStatus(IBookStatus status);
+    void changeStatus(Book book, IBookStatus status);
 
     void sendGuideNotification(Book book);
 

@@ -3,11 +3,15 @@ package uade.edu.guides.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.BookDTO;
+import uade.edu.guides.domain.CreateBookDTO;
 import uade.edu.guides.domain.FacturaDTO;
 import uade.edu.guides.service.BookService;
 
@@ -23,6 +27,12 @@ public class BookController {
     @GetMapping
     public List<BookDTO> getAllBooks() {
         return service.getAllBooks();
+    }
+
+    @PostMapping
+    public BookDTO createBook(
+            @Valid @RequestBody CreateBookDTO dto) {
+        return service.createBook(dto);
     }
 
     @GetMapping("/{bookId}")

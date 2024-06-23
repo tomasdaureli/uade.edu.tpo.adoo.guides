@@ -57,9 +57,13 @@ CREATE TABLE guide_services (
 CREATE TABLE trips (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     profile_id BIGINT,
+    guide_id BIGINT,
+    service_id BIGINT,
     start_date DATE,
     end_date DATE,
-    FOREIGN KEY (profile_id) REFERENCES `profiles` (id) ON DELETE CASCADE
+    FOREIGN KEY (profile_id) REFERENCES profiles (id) ON DELETE CASCADE,
+    FOREIGN KEY (guide_id) REFERENCES profiles (id),
+    FOREIGN KEY (service_id) REFERENCES services (id)
 );
 
 CREATE TABLE books (

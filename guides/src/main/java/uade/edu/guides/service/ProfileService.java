@@ -13,8 +13,8 @@ public interface ProfileService {
 
     ProfileResponseDTO updateProfile(Long profileId, UpdateProfileDTO dto);
 
-    void autenticarUsuario(long profileId);
+    void autenticarUsuario(Long profileId);
 
-    void cambiarEstrategiaAutenticacion(long profileId, IEstrategiaAutenticacion estrategia);
+    void cambiarEstrategiaAutenticacion(Long profileId, IEstrategiaAutenticacion estrategia);
 
 }

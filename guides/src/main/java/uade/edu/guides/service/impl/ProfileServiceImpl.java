@@ -24,10 +24,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileMapper profileMapper;
 
-    // lo inyectamos aca, o en la entidad, no me hace sentido que este en los dos
-    // lugares
-    private IEstrategiaAutenticacion estrategiaAutenticacion;
-
     @Override
     public List<ProfileResponseDTO> getAllProfiles() {
         List<Profile> listProfiles = repository.findAll();
@@ -69,22 +65,20 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public void autenticarUsuario(long profileId) {
+    public void autenticarUsuario(Long profileId) {
         Profile profile = repository.findById(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         ProfileResponseDTO profileDTO = profileMapper.toProfileResponseDTO(profile);
 
         profile.getAutenticacion().autenticarUsuario(profileDTO);
-        // estrategiaAutenticacion.autenticarUsuario(dto);
     }
 
     @Override
-    public void cambiarEstrategiaAutenticacion(long profileId, IEstrategiaAutenticacion estrategia) {
+    public void cambiarEstrategiaAutenticacion(Long profileId, IEstrategiaAutenticacion estrategia) {
         Profile profile = repository.findById(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
 
         profile.setAutenticacion(estrategia);
-        // this.estrategiaAutenticacion = estrategia;
     }
 }

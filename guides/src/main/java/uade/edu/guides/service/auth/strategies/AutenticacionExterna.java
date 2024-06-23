@@ -5,7 +5,6 @@ import java.util.Random;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.domain.ProfileResponseDTO;
 import uade.edu.guides.service.auth.IAdapterAutenticacionExterna;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;

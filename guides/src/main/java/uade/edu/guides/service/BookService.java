@@ -22,6 +22,8 @@ public interface BookService {
 
     List<BookDTO> getAllBooks();
 
+    List<BookDTO> getBooksByTourist(Long touristId);
+
     BookDTO getBookById(Long id);
 
     void cancelBook(Long id);

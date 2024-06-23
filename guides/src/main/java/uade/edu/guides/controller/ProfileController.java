@@ -20,6 +20,7 @@ import uade.edu.guides.domain.TrophyDTO;
 import uade.edu.guides.domain.UpdateProfileDTO;
 import uade.edu.guides.service.GuideService;
 import uade.edu.guides.service.ProfileService;
+import uade.edu.guides.service.TouristService;
 
 @RestController
 @RequestMapping("/profiles")
@@ -29,6 +30,8 @@ public class ProfileController {
     private final ProfileService profileService;
 
     private final GuideService guideService;
+
+    private final TouristService touristService;
 
     @GetMapping
     public List<ProfileResponseDTO> getAllProfiles() {
@@ -51,6 +54,12 @@ public class ProfileController {
     @GetMapping("/guides")
     public List<ProfileResponseDTO> getAllGuides() {
         return guideService.getAllGuides();
+    }
+
+    @GetMapping("/guides/{guideId}")
+    public ProfileResponseDTO getGuideById(
+            @PathVariable Long guideId) {
+        return guideService.getGuideById(guideId);
     }
 
     @PatchMapping("/guides/{guideId}")
@@ -85,6 +94,19 @@ public class ProfileController {
     public List<TrophyDTO> getAllTrophies(
             @PathVariable Long guideId) {
         return guideService.getAllTrophies(guideId);
+    }
+
+    @GetMapping("/tourists/{touristId}")
+    public ProfileResponseDTO getTouristById(
+            @PathVariable Long touristId) {
+        return touristService.getTouristById(touristId);
+    }
+
+    @GetMapping("/tourists/{touristId}/payment/{bookId}")
+    public void getTouristById(
+            @PathVariable Long touristId,
+            @PathVariable Long bookId) {
+        touristService.realizarPago(touristId, bookId);
     }
 
 }

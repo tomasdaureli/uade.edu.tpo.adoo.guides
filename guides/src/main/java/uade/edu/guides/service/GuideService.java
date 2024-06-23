@@ -11,6 +11,8 @@ public interface GuideService {
 
     List<ProfileResponseDTO> getAllGuides();
 
+    ProfileResponseDTO getGuideById(Long guideId);
+
     ProfileResponseDTO updateServices(Long guideId, GuideUpdateServicesDTO servicesDto);
 
     void addReview(Long guideId, ReviewDTO review);

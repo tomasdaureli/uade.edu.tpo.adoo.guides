@@ -52,6 +52,14 @@ public class GuideServiceImpl implements GuideService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ProfileResponseDTO getGuideById(Long guideId) {
+        Guide guide = profileRepository.findGuideById(guideId)
+                .orElseThrow(GuideNotFoundException::new);
+
+        return mapper.toProfileResponseDTO(guide);
+    }
+
     @Transactional
     public ProfileResponseDTO updateServices(Long guideId, GuideUpdateServicesDTO servicesDto) {
         Guide guide = profileRepository.findGuideById(guideId)

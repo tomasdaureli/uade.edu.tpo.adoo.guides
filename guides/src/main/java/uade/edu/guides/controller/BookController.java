@@ -59,4 +59,10 @@ public class BookController {
         return service.getFacturaByBookId(bookId);
     }
 
+    @GetMapping("/{touristId}")
+    public List<BookDTO> getBooksByTourist(
+            @PathVariable Long touristId) {
+        return service.getBooksByTourist(touristId);
+    }
+
 }

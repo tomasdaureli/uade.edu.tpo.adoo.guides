@@ -3,14 +3,12 @@ package uade.edu.guides.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import uade.edu.guides.domain.*;
 import uade.edu.guides.entity.*;
 import uade.edu.guides.exception.GuideNotFoundException;
@@ -19,8 +17,9 @@ import uade.edu.guides.mapper.ProfileMapper;
 import uade.edu.guides.repository.ProfileRepository;
 import uade.edu.guides.repository.TourismServiceRepository;
 import uade.edu.guides.service.GuideService;
+import uade.edu.guides.service.credent.IAdapterIA;
+import uade.edu.guides.service.observ.IObserver;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GuideServiceImpl implements GuideService {
@@ -30,6 +29,10 @@ public class GuideServiceImpl implements GuideService {
     private final TourismServiceRepository serviceRepository;
 
     private final ProfileMapper mapper;
+
+    private final IAdapterIA adapterIa;
+
+    private List<IObserver> listObservers;
 
     @Override
     public ProfileResponseDTO addAdditionalDataForGuide(Long guideId, GuideAdditionalDataDTO dto) {
@@ -93,21 +96,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     public void addTrophy(Long guideId, TrophyDTO trophyDto) {
-        Guide guide = profileRepository.findGuideById(guideId)
-                .orElseThrow(GuideNotFoundException::new);
-
-        Trophy newTrophy = mapper.toTrophy(trophyDto);
-
-        List<Trophy> trophies = guide.getTrophies();
-
-        if (trophies == null) {
-            trophies = new ArrayList<>();
-            guide.setTrophies(trophies);
-        }
-
-        trophies.add(newTrophy);
-
-        profileRepository.save(guide);
+        listObservers.forEach(o -> o.addTrophyGuide(guideId, trophyDto));
     }
 
     public List<TrophyDTO> getAllTrophies(Long guideId) {
@@ -121,19 +110,8 @@ public class GuideServiceImpl implements GuideService {
                 .collect(Collectors.toList());
     }
 
-    private Boolean verifyCredential(String credentialId) {
-        Random random = new Random();
-        int randomNumber = random.nextInt(2);
-        switch (randomNumber) {
-            case 0:
-                log.info("Credencial válida: {}", credentialId);
-                return true;
-            case 1:
-                log.info("Credencial inválida: {}", credentialId);
-                return false;
-            default:
-                throw new IllegalStateException("Número aleatorio fuera de rango");
-        }
+    public Boolean verifyCredential(String credentialId) {
+        return adapterIa.verifyCredential(credentialId);
     }
 
     private Double calculateScore(List<Review> reviews) {
@@ -146,6 +124,16 @@ public class GuideServiceImpl implements GuideService {
         }
 
         return totalScore;
+    }
+
+    @Override
+    public void attach(IObserver observer) {
+        listObservers.add(observer);
+    }
+
+    @Override
+    public void detach(IObserver observer) {
+        listObservers.remove(observer);
     }
 
 }

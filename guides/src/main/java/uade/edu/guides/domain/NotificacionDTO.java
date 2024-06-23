@@ -12,8 +12,6 @@ import uade.edu.guides.entity.Profile;
 @NoArgsConstructor
 public class NotificacionDTO {
 
-    private String mensaje;
-
     private String descripcion;
 
     private Profile receptor;

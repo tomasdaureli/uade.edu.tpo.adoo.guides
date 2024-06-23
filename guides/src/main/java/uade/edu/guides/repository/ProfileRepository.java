@@ -24,4 +24,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("SELECT g FROM Guide g WHERE TYPE(g) = Guide")
     List<Guide> findByProfileType();
 
+    @Query("SELECT g FROM Guide g WHERE g.id = :id")
+    Profile findProfileByID(@Param("id") Long id);
+
 }

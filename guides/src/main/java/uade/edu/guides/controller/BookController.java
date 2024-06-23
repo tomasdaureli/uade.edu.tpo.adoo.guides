@@ -14,6 +14,7 @@ import uade.edu.guides.domain.BookDTO;
 import uade.edu.guides.domain.CreateBookDTO;
 import uade.edu.guides.domain.FacturaDTO;
 import uade.edu.guides.service.BookService;
+import uade.edu.guides.service.FacturaService;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
 public class BookController {
 
     private final BookService service;
+    private final FacturaService facturaService;
 
     @GetMapping
     public List<BookDTO> getAllBooks() {
@@ -47,16 +49,17 @@ public class BookController {
         service.acceptBook(bookId);
     }
 
-    @PatchMapping("/cancel/{bookId}")
+    @PatchMapping("/cancel/{bookId}/{profileId}")
     public void cancelBook(
-            @PathVariable Long bookId) {
-        service.cancelBook(bookId);
+            @PathVariable Long bookId,
+            @PathVariable Long profileId) {
+        service.cancelBook(bookId, profileId);
     }
 
     @GetMapping("/{bookId}/bill")
     public FacturaDTO getBillByBook(
             @PathVariable Long bookId) {
-        return service.getFacturaByBookId(bookId);
+        return facturaService.getFacturaByBook(bookId);
     }
 
     @GetMapping("/{touristId}")

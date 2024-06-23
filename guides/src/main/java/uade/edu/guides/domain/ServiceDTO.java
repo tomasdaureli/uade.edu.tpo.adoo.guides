@@ -19,4 +19,6 @@ public class ServiceDTO {
 
     private LanguageDTO language;
 
+    private Double price;
+
 }

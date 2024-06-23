@@ -11,8 +11,6 @@ import uade.edu.guides.entity.Factura;
 @Repository
 public interface FacturaRepository extends JpaRepository<Factura, Long> {
 
-    Optional<Factura> findByBookId(Long bookId);
-
-    Optional<Factura> findByBook(Book book);
+    Optional<Factura> findByReserva(Book book);
 
 }

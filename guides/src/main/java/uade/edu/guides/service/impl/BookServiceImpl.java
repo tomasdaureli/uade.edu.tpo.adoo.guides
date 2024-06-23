@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.*;
@@ -44,7 +45,7 @@ public class BookServiceImpl implements BookService {
     private final Notificador notificador;
     private static final Double SIGN_PERCENT = 0.10;
     private static final Double RECHARGE = 0.5; // 50%
-    private static final Long DAYS_TO_REVIEW = 3L;
+    private static final Long DAYS_TO_REVIEW = 4L;
 
     @Override
     public void changeStatus(Book book, IBookStatus status) {
@@ -57,7 +58,7 @@ public class BookServiceImpl implements BookService {
         Tourist tourist = profileRepository.findTouristById(dto.getTouristId())
                 .orElseThrow(ProfileNotFoundException::new);
 
-        Trip newTrip = buildTrip(dto);
+        Trip newTrip = buildTrip(dto, tourist);
 
         if (newTrip != null) {
             Book newBook = new Book();
@@ -79,7 +80,7 @@ public class BookServiceImpl implements BookService {
         return trip.getService().getPrice() * SIGN_PERCENT;
     }
 
-    private Trip buildTrip(CreateBookDTO dto) {
+    private Trip buildTrip(CreateBookDTO dto, Tourist tourist) {
         Guide guide = profileRepository.findGuideById(dto.getGuideId())
                 .orElseThrow(GuideNotFoundException::new);
 
@@ -89,6 +90,7 @@ public class BookServiceImpl implements BookService {
         if (guideHasService(guide, service)
                 && checkAvailability(guide, dto.getStartDate(), dto.getEndDate())) {
             Trip trip = new Trip();
+            trip.setProfile(tourist);
             trip.setStartDate(dto.getStartDate());
             trip.setEndDate(dto.getEndDate());
             trip.setGuide(guide);
@@ -162,7 +164,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private Boolean touristCancell(Long profileId) {
-        Profile profile = profileRepository.findProfileByID(profileId);
+        Profile profile = profileRepository.findProfileById(profileId);
         return profile instanceof Tourist;
     }
 
@@ -213,8 +215,9 @@ public class BookServiceImpl implements BookService {
         status.sendTouristNotification(book);
     }
 
-    @Scheduled(cron = "0 0 10 * * ?")
-    private void sendTouristNotificationAfterEndDate() {
+    @Transactional
+    @Scheduled(cron = "0 51 19 * * ?")
+    protected void sendTouristNotificationAfterEndDate() {
         LocalDate currentDate = LocalDate.now();
         List<Book> endedBooks = repository.findByTripEndDateBefore(currentDate);
         for (Book b : endedBooks) {

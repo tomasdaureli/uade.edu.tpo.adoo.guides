@@ -7,8 +7,10 @@ import uade.edu.guides.domain.FacturaDTO;
 import uade.edu.guides.entity.Book;
 import uade.edu.guides.entity.Factura;
 import uade.edu.guides.entity.Tourist;
+import uade.edu.guides.exception.BookNotFoundException;
 import uade.edu.guides.exception.FacturaNotFoundException;
 import uade.edu.guides.mapper.FacturaMapper;
+import uade.edu.guides.repository.BookRepository;
 import uade.edu.guides.repository.FacturaRepository;
 import uade.edu.guides.service.FacturaService;
 
@@ -17,11 +19,17 @@ import uade.edu.guides.service.FacturaService;
 public class FacturaServiceImpl implements FacturaService {
 
     private final FacturaRepository repository;
+
     private final FacturaMapper mapper;
 
+    private final BookRepository bookRepository;
+
     @Override
-    public FacturaDTO getFacturaByBook(Long bookID) {
-        Factura factura = repository.findByBookId(bookID).orElseThrow(FacturaNotFoundException::new);
+    public FacturaDTO getFacturaByBook(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(BookNotFoundException::new);
+        Factura factura = repository.findByReserva(book)
+                .orElseThrow(FacturaNotFoundException::new);
 
         return mapper.toFacturaDTO(factura);
 
@@ -51,9 +59,11 @@ public class FacturaServiceImpl implements FacturaService {
 
     @Override
     public void updateFactura(Book book, Double recharge) {
-        Factura factura = repository.findByBook(book).orElseThrow(FacturaNotFoundException::new);
+        Factura factura = repository.findByReserva(book).orElseThrow(FacturaNotFoundException::new);
 
         factura.setTotal(factura.getTotal() * recharge);
+        factura.setPendiente(factura.getTotal() - book.getSignPayment());
+
         repository.save(factura);
     }
 

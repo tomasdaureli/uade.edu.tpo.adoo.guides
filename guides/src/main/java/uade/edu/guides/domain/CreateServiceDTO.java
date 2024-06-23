@@ -22,4 +22,7 @@ public class CreateServiceDTO {
     @NotNull
     private LanguageDTO language;
 
+    @NotNull
+    private Double price;
+
 }

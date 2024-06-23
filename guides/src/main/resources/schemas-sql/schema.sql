@@ -108,3 +108,6 @@ CREATE TABLE guides_cities (
     PRIMARY KEY (profile_id, city),
     FOREIGN KEY (profile_id) REFERENCES profiles (id)
 );
+
+ALTER TABLE facturas
+ADD COLUMN pendiente DOUBLE;

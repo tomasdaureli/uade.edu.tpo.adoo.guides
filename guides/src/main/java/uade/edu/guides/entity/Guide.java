@@ -30,7 +30,7 @@ public class Guide extends Profile {
     private String photoId;
 
     @OneToMany(mappedBy = "guide", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> review;
+    private List<Review> reviews;
 
     private Double score;
 

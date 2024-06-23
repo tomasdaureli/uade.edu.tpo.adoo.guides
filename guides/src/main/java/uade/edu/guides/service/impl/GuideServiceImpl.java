@@ -91,14 +91,15 @@ public class GuideServiceImpl implements GuideService {
 
         Review newReview = mapper.toReview(reviewDto);
 
-        List<Review> reviews = guide.getReview();
+        List<Review> reviews = guide.getReviews();
 
         if (reviews == null) {
             reviews = new ArrayList<>();
-            guide.setReview(reviews);
         }
 
         reviews.add(newReview);
+        guide.setReviews(reviews);
+        guide.setScore(calculateScore(guide));
 
         profileRepository.save(guide);
     }
@@ -122,12 +123,12 @@ public class GuideServiceImpl implements GuideService {
         return adapterIa.verifyCredential(credentialId);
     }
 
-    private Double calculateScore(List<Review> reviews) {
-        if (reviews == null || reviews.isEmpty())
+    private Double calculateScore(Guide guide) {
+        if (guide.getReviews() == null || guide.getReviews().isEmpty())
             return 0.0;
 
         double totalScore = 0.0;
-        for (Review r : reviews) {
+        for (Review r : guide.getReviews()) {
             totalScore += r.getScore();
         }
 

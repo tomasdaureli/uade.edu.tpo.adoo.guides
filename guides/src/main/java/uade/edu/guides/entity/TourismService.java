@@ -27,6 +27,8 @@ public class TourismService {
     @Enumerated(EnumType.STRING)
     private Language language;
 
+    private Double price;
+
     @ManyToMany(mappedBy = "services")
     private List<Guide> guides;
 

@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.CreateProfileDTO;
 import uade.edu.guides.domain.GuideAdditionalDataDTO;
+import uade.edu.guides.domain.GuideUpdateServicesDTO;
 import uade.edu.guides.domain.ProfileResponseDTO;
 import uade.edu.guides.domain.ReviewDTO;
 import uade.edu.guides.domain.TrophyDTO;
@@ -57,6 +58,13 @@ public class ProfileController {
             @PathVariable Long guideId,
             @Valid @RequestBody GuideAdditionalDataDTO dto) {
         return guideService.addAdditionalDataForGuide(guideId, dto);
+    }
+
+    @PatchMapping("/guides/{guideId}/services")
+    public ProfileResponseDTO updateServices(
+            @PathVariable Long guideId,
+            @Valid @RequestBody GuideUpdateServicesDTO dto) {
+        return guideService.updateServices(guideId, dto);
     }
 
     @PostMapping("/guides/reviews/{guideId}")

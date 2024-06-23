@@ -31,12 +31,14 @@ public class GuideServiceImpl implements GuideService {
 
     private final ProfileMapper mapper;
 
-    private static final String PROFILE_TYPE = "guide";
-
     @Override
     public ProfileResponseDTO addAdditionalDataForGuide(Long guideId, GuideAdditionalDataDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addAdditionalDataForGuide'");
+        Guide guide = profileRepository.findGuideById(guideId)
+                .orElseThrow(GuideNotFoundException::new);
+
+        return mapper.toProfileResponseDTO(
+                profileRepository.save(
+                        mapper.toGuideFromAdditionalDataDTO(dto, guide)));
     }
 
     public List<ProfileResponseDTO> getAllGuides() {
@@ -48,15 +50,15 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Transactional
-    public ProfileResponseDTO updateServices(Long guideId, List<Long> servicesDto) {
-        Guide guide = profileRepository.findByIdAndProfileType(guideId)
+    public ProfileResponseDTO updateServices(Long guideId, GuideUpdateServicesDTO servicesDto) {
+        Guide guide = profileRepository.findGuideById(guideId)
                 .orElseThrow(GuideNotFoundException::new);
 
         Set<Long> currentServiceIds = guide.getServices().stream()
                 .map(TourismService::getId)
                 .collect(Collectors.toSet());
 
-        Set<Long> newServiceIds = new HashSet<>(servicesDto);
+        Set<Long> newServiceIds = new HashSet<>(servicesDto.getServices());
 
         guide.getServices().removeIf(service -> !newServiceIds.contains(service.getId()));
 
@@ -73,7 +75,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     public void addReview(Long guideId, ReviewDTO reviewDto) {
-        Guide guide = profileRepository.findByIdAndProfileType(guideId)
+        Guide guide = profileRepository.findGuideById(guideId)
                 .orElseThrow(GuideNotFoundException::new);
 
         Review newReview = mapper.toReview(reviewDto);
@@ -91,7 +93,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     public void addTrophy(Long guideId, TrophyDTO trophyDto) {
-        Guide guide = profileRepository.findByIdAndProfileType(guideId)
+        Guide guide = profileRepository.findGuideById(guideId)
                 .orElseThrow(GuideNotFoundException::new);
 
         Trophy newTrophy = mapper.toTrophy(trophyDto);
@@ -109,7 +111,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     public List<TrophyDTO> getAllTrophies(Long guideId) {
-        Guide guide = profileRepository.findByIdAndProfileType(guideId)
+        Guide guide = profileRepository.findGuideById(guideId)
                 .orElseThrow(GuideNotFoundException::new);
 
         List<Trophy> listTrophies = guide.getTrophies();

@@ -3,6 +3,7 @@ package uade.edu.guides.service;
 import java.util.List;
 
 import uade.edu.guides.domain.*;
+import uade.edu.guides.entity.Guide;
 import uade.edu.guides.service.observ.IObserver;
 
 public interface GuideService {
@@ -17,7 +18,7 @@ public interface GuideService {
 
     void addReview(Long guideId, ReviewDTO review);
 
-    void addTrophy(Long guideId, TrophyDTO trophy);
+    void addTrophy(Guide guide, TrophyDTO trophy);
 
     void attach(IObserver observer);
 

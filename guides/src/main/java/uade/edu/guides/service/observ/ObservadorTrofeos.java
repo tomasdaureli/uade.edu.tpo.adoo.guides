@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.TrophyDTO;
 import uade.edu.guides.entity.Guide;
 import uade.edu.guides.entity.Trophy;
-import uade.edu.guides.exception.GuideNotFoundException;
 import uade.edu.guides.mapper.ProfileMapper;
 import uade.edu.guides.repository.ProfileRepository;
 
@@ -18,14 +17,13 @@ import uade.edu.guides.repository.ProfileRepository;
 public class ObservadorTrofeos implements IObserver {
 
     private final ProfileRepository profileRepository;
+
     private final ProfileMapper mapper;
 
     @Override
-    public void addTrophyGuide(Long guideId, TrophyDTO trophyDto) {
-        Guide guide = profileRepository.findGuideById(guideId)
-                .orElseThrow(GuideNotFoundException::new);
-
+    public void addTrophyGuide(Guide guide, TrophyDTO trophyDto) {
         Trophy newTrophy = mapper.toTrophy(trophyDto);
+        newTrophy.setGuide(guide);
 
         List<Trophy> trophies = guide.getTrophies();
 

@@ -18,7 +18,10 @@ import uade.edu.guides.repository.ProfileRepository;
 import uade.edu.guides.repository.TourismServiceRepository;
 import uade.edu.guides.service.GuideService;
 import uade.edu.guides.service.credent.IAdapterIA;
+import uade.edu.guides.service.notifications.Notificador;
 import uade.edu.guides.service.observ.IObserver;
+import uade.edu.guides.service.observ.ObservadorNotificacion;
+import uade.edu.guides.service.observ.ObservadorTrofeos;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +35,7 @@ public class GuideServiceImpl implements GuideService {
 
     private final IAdapterIA adapterIa;
 
-    private List<IObserver> listObservers;
+    private List<IObserver> listObservers = new ArrayList<>();
 
     @Override
     public ProfileResponseDTO addAdditionalDataForGuide(Long guideId, GuideAdditionalDataDTO dto) {
@@ -90,6 +93,7 @@ public class GuideServiceImpl implements GuideService {
                 .orElseThrow(GuideNotFoundException::new);
 
         Review newReview = mapper.toReview(reviewDto);
+        newReview.setGuide(guide);
 
         List<Review> reviews = guide.getReviews();
 
@@ -99,13 +103,20 @@ public class GuideServiceImpl implements GuideService {
 
         reviews.add(newReview);
         guide.setReviews(reviews);
-        guide.setScore(calculateScore(guide));
+        guide.setScore(calculateScore(profileRepository.save(guide)));
 
         profileRepository.save(guide);
+
+        if (guide.getScore() >= 4.5
+                && guide.getReviews().size() >= 10) {
+            addTrophy(guide, new TrophyDTO(TrophyTypeDTO.SUCCESS));
+        }
     }
 
-    public void addTrophy(Long guideId, TrophyDTO trophyDto) {
-        listObservers.forEach(o -> o.addTrophyGuide(guideId, trophyDto));
+    public void addTrophy(Guide guide, TrophyDTO trophyDto) {
+        attach(new ObservadorNotificacion(new Notificador()));
+        attach(new ObservadorTrofeos(profileRepository, mapper));
+        listObservers.forEach(o -> o.addTrophyGuide(guide, trophyDto));
     }
 
     public List<TrophyDTO> getAllTrophies(Long guideId) {

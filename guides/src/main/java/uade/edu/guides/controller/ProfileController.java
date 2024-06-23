@@ -83,13 +83,6 @@ public class ProfileController {
         guideService.addReview(guideId, review);
     }
 
-    @PostMapping("/guides/trophies/{guideId}")
-    public void addTrophy(
-            @PathVariable Long guideId,
-            @RequestBody TrophyDTO trophy) {
-        guideService.addTrophy(guideId, trophy);
-    }
-
     @GetMapping("/guides/trophies/{guideId}")
     public List<TrophyDTO> getAllTrophies(
             @PathVariable Long guideId) {

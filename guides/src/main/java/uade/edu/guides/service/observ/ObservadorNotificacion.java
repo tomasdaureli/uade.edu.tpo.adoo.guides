@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.NotificacionDTO;
 import uade.edu.guides.domain.TrophyDTO;
-import uade.edu.guides.repository.ProfileRepository;
+import uade.edu.guides.entity.Guide;
 import uade.edu.guides.service.notifications.Notificador;
 import uade.edu.guides.service.notifications.adapters.FireBase;
 import uade.edu.guides.service.notifications.adapters.JavaMail;
@@ -17,12 +17,11 @@ import uade.edu.guides.service.notifications.strategies.NotificacionPush;
 public class ObservadorNotificacion implements IObserver {
 
     private final Notificador notificador;
-    private final ProfileRepository repository;
 
     @Override
-    public void addTrophyGuide(Long guideId, TrophyDTO trophyDto) {
+    public void addTrophyGuide(Guide guide, TrophyDTO trophyDto) {
         NotificacionDTO dtoNotif = new NotificacionDTO();
-        dtoNotif.setReceptor(repository.findProfileByID(guideId));
+        dtoNotif.setReceptor(guide);
         dtoNotif.setDescripcion("Nuevo trofeo Obtenido. Felicitaciones! " + dtoNotif.getReceptor().getName() + " "
                 + dtoNotif.getReceptor().getLastName());
         notificador.setNotif(new NotificacionMail(new JavaMail()));

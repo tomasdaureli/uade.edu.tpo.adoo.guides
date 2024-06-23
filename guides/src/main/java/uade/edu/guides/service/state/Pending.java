@@ -2,18 +2,25 @@ package uade.edu.guides.service.state;
 
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import uade.edu.guides.domain.NotificacionDTO;
 import uade.edu.guides.entity.Book;
+import uade.edu.guides.service.notifications.Notificador;
 
 @Slf4j
 @Component("pendingStatus")
+@RequiredArgsConstructor
 public class Pending implements IBookStatus {
+
+    private final Notificador notificador;
 
     @Override
     public void sendTouristNotification(Book book) {
-        log.info(String.format("Reserva de %s creada para %s.",
-                book.getTrip().getService().getName(),
-                book.getTourist().getUsername()));
+        NotificacionDTO notif = new NotificacionDTO();
+        notif.setReceptor(book.getTourist());
+        notif.setDescripcion("Reserva de " + book.getTrip().getService().getName() + " creada para " + book.getTourist().getUsername());
+        notificador.enviarNotificacion(notif);
     }
 
     @Override

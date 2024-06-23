@@ -42,13 +42,13 @@ public class BookServiceImpl implements BookService {
     private final IBookStatus cancelledStatus;
 
     private final Notificador notificador;
-    private static final Double SIGN_PERCENT = 0.10; 
-    private static final Double RECHARGE = 0.5; //50%
-    private static final Long DAYTS_TO_REVIEW = 3L;
+    private static final Double SIGN_PERCENT = 0.10;
+    private static final Double RECHARGE = 0.5; // 50%
+    private static final Long DAYS_TO_REVIEW = 3L;
 
     @Override
     public void changeStatus(Book book, IBookStatus status) {
-        sendTouristNotification(book,status);
+        sendTouristNotification(book, status);
         book.setStatus(status.getStatus());
     }
 
@@ -58,7 +58,6 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(ProfileNotFoundException::new);
 
         Trip newTrip = buildTrip(dto);
-
 
         if (newTrip != null) {
             Book newBook = new Book();
@@ -76,8 +75,8 @@ public class BookServiceImpl implements BookService {
         throw new IllegalStateException("Se produjo un error al crear la reserva.");
     }
 
-    private Double calculateSign(Trip trip){
-        return trip.getService().getPrice()*SIGN_PERCENT;
+    private Double calculateSign(Trip trip) {
+        return trip.getService().getPrice() * SIGN_PERCENT;
     }
 
     private Trip buildTrip(CreateBookDTO dto) {
@@ -154,8 +153,7 @@ public class BookServiceImpl implements BookService {
         Book book = repository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
 
-        if(Boolean.TRUE.equals(touristCancell(profileId)))
-        {
+        if (Boolean.TRUE.equals(touristCancell(profileId))) {
             facturaService.updateFactura(book, addRecharge(book));
         }
         changeStatus(book, cancelledStatus);
@@ -163,20 +161,19 @@ public class BookServiceImpl implements BookService {
         repository.save(book);
     }
 
-    private Boolean touristCancell(Long profileId){
+    private Boolean touristCancell(Long profileId) {
         Profile profile = profileRepository.findProfileByID(profileId);
         return profile instanceof Tourist;
     }
 
-    private Double addRecharge(Book book){
+    private Double addRecharge(Book book) {
         Double amountRecharge = 0.0;
 
-        if(LocalDate.now().isEqual(book.getTrip().getStartDate()) || LocalDate.now().isAfter(book.getTrip().getStartDate()))
-        {
-            amountRecharge  = 1.0;
+        if (LocalDate.now().isEqual(book.getTrip().getStartDate())
+                || LocalDate.now().isAfter(book.getTrip().getStartDate())) {
+            amountRecharge = 1.0;
         }
-        if(book.getStatus().equals("CONFIRMED"))
-        {
+        if (book.getStatus().equals("CONFIRMED")) {
             amountRecharge = RECHARGE;
         }
 
@@ -202,39 +199,39 @@ public class BookServiceImpl implements BookService {
     private void sendGuideNotification(Book book) {
         NotificacionDTO notif = new NotificacionDTO();
         notif.setReceptor(book.getTrip().getGuide());
-        notif.setDescripcion("Se creo una Reseva " + book.getId() + " por el turista " + book.getTourist().getUsername());
+        notif.setDescripcion(
+                "Se creo una Reseva " + book.getId() + " por el turista " + book.getTourist().getUsername());
         notificador.setNotif(new NotificacionMail(new JavaMail()));
         notificador.enviarNotificacion(notif);
         notificador.setNotif(new NotificacionPush(new FireBase()));
         notificador.enviarNotificacion(notif);
-        
+
     }
 
     @Override
-    public void sendTouristNotification(Book book,IBookStatus status) {
+    public void sendTouristNotification(Book book, IBookStatus status) {
         status.sendTouristNotification(book);
     }
 
     @Scheduled(cron = "0 0 10 * * ?")
-    private void sendTouristNotificationAfterEndDate(){
+    private void sendTouristNotificationAfterEndDate() {
         LocalDate currentDate = LocalDate.now();
         List<Book> endedBooks = repository.findByTripEndDateBefore(currentDate);
-        for(Book b : endedBooks){
-            if(currentDate.minusDays(DAYTS_TO_REVIEW).isEqual(b.getTrip().getEndDate()))
-            {
+        for (Book b : endedBooks) {
+            if (currentDate.minusDays(DAYS_TO_REVIEW).isEqual(b.getTrip().getEndDate())) {
                 NotificacionDTO notif = new NotificacionDTO();
                 notif.setReceptor(b.getTourist());
-                notif.setDescripcion("Califique al Guia " + b.getTrip().getGuide().getName() + " " + b.getTrip().getGuide().getLastName() + "\nPor el Servicio : " + b.getTrip().getService().getName());
+                notif.setDescripcion("Califique al Guia " + b.getTrip().getGuide().getName() + " "
+                        + b.getTrip().getGuide().getLastName() + "\nPor el Servicio : "
+                        + b.getTrip().getService().getName());
                 notificador.cambiarEstrategiaNotif(new NotificacionMail(new JavaMail()));
                 notificador.enviarNotificacion(notif);
                 notificador.cambiarEstrategiaNotif(new NotificacionPush(new FireBase()));
                 notificador.enviarNotificacion(notif);
             }
-            
+
         }
 
     }
-
-
 
 }

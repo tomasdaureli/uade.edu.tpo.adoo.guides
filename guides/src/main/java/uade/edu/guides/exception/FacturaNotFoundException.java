@@ -7,11 +7,10 @@ import uade.edu.guides.entity.Factura;
 
 @SuppressWarnings("serial")
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-
 public class FacturaNotFoundException extends RuntimeException {
 
-    public FacturaNotFoundException(){
+    public FacturaNotFoundException() {
         super(Factura.class.getCanonicalName());
     }
-    
+
 }

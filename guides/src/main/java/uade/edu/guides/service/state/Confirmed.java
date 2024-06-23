@@ -26,9 +26,8 @@ public class Confirmed implements IBookStatus {
         notificador.enviarNotificacion(notif);
         notificador.setNotif(new NotificacionPush(new FireBase()));
         notificador.enviarNotificacion(notif);
-     
+
     }
-    
 
     @Override
     public void acceptBook(Book book) {

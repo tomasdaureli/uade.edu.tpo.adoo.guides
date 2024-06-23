@@ -24,16 +24,16 @@ public class FacturaServiceImpl implements FacturaService {
         Factura factura = repository.findByBookId(bookID).orElseThrow(FacturaNotFoundException::new);
 
         return mapper.toFacturaDTO(factura);
-        
+
     }
 
-    private Double calularTotal(Book book,Factura factura){
-        return (book.getTrip().getService().getPrice())*factura.getComision();
+    private Double calularTotal(Book book, Factura factura) {
+        return (book.getTrip().getService().getPrice()) * factura.getComision();
     }
 
-    private Double calularPendiente(Book book,Factura factura){
+    private Double calularPendiente(Book book, Factura factura) {
         double sign = book.getSignPayment();
-        double servicePrice = (book.getTrip().getService().getPrice())*factura.getComision();
+        double servicePrice = (book.getTrip().getService().getPrice()) * factura.getComision();
         return (servicePrice - sign);
     }
 
@@ -42,9 +42,9 @@ public class FacturaServiceImpl implements FacturaService {
         Factura factura = new Factura();
         factura.setReserva(book);
         factura.setTurista(tourist);
-        factura.setTotal(calularTotal(book,factura));
+        factura.setTotal(calularTotal(book, factura));
         factura.setPendiente(calularPendiente(book, factura));
-        
+
         repository.save(factura);
 
     }
@@ -53,10 +53,8 @@ public class FacturaServiceImpl implements FacturaService {
     public void updateFactura(Book book, Double recharge) {
         Factura factura = repository.findByBook(book).orElseThrow(FacturaNotFoundException::new);
 
-        factura.setTotal(factura.getTotal()*recharge);
+        factura.setTotal(factura.getTotal() * recharge);
         repository.save(factura);
     }
-
-    
 
 }

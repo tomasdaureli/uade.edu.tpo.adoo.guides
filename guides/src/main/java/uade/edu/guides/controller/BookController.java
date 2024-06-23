@@ -51,8 +51,9 @@ public class BookController {
 
     @PatchMapping("/cancel/{bookId}/{profileId}")
     public void cancelBook(
-            @PathVariable Long bookId, @PathVariable Long profileId) {
-        service.cancelBook(bookId,profileId);
+            @PathVariable Long bookId,
+            @PathVariable Long profileId) {
+        service.cancelBook(bookId, profileId);
     }
 
     @GetMapping("/{bookId}/bill")
@@ -66,6 +67,5 @@ public class BookController {
             @PathVariable Long touristId) {
         return service.getBooksByTourist(touristId);
     }
-
 
 }

@@ -13,6 +13,7 @@ import uade.edu.guides.entity.Tourist;
 public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByTourist(Tourist tourist);
+
     List<Book> findByTripEndDateBefore(LocalDate now);
 
 }

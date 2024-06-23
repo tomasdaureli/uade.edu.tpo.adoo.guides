@@ -31,5 +31,7 @@ public class CreateProfileDTO {
     private String password;
     @NotNull
     private ProfileTypeDTO type;
+    @NotNull
+    private AuthTypeDTO authType;
 
 }

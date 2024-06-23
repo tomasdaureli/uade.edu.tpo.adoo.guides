@@ -13,6 +13,8 @@ import uade.edu.guides.mapper.ProfileMapper;
 import uade.edu.guides.repository.ProfileRepository;
 import uade.edu.guides.service.ProfileService;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
+import uade.edu.guides.service.auth.strategies.AutenticacionExterna;
+import uade.edu.guides.service.auth.strategies.AutenticacionLocal;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +49,12 @@ public class ProfileServiceImpl implements ProfileService {
 
         Profile savedProfile = repository.save(profile);
 
+        if (AuthTypeDTO.INTERNAL.equals(dto.getAuthType())) {
+            this.cambiarEstrategiaAutenticacion(savedProfile.getId(), new AutenticacionLocal());
+        } else {
+            this.cambiarEstrategiaAutenticacion(savedProfile.getId(), new AutenticacionExterna());
+        }
+
         return profileMapper.toProfileResponseDTO(savedProfile);
     }
 
@@ -61,12 +69,22 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public void autenticarUsuario(AuthenticateUserDTO dto) {
-        estrategiaAutenticacion.autenticarUsuario(dto);
+    public void autenticarUsuario(long profileId) {
+        Profile profile = repository.findById(profileId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        ProfileResponseDTO profileDTO = profileMapper.toProfileResponseDTO(profile);
+
+        profile.getAutenticacion().autenticarUsuario(profileDTO);
+        // estrategiaAutenticacion.autenticarUsuario(dto);
     }
 
     @Override
-    public void cambiarEstrategiaAutenticacion(IEstrategiaAutenticacion estrategia) {
-        this.estrategiaAutenticacion = estrategia;
+    public void cambiarEstrategiaAutenticacion(long profileId, IEstrategiaAutenticacion estrategia) {
+        Profile profile = repository.findById(profileId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        profile.setAutenticacion(estrategia);
+        // this.estrategiaAutenticacion = estrategia;
     }
 }

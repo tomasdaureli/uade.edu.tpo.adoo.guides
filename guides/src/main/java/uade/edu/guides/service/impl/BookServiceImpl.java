@@ -13,6 +13,11 @@ import uade.edu.guides.exception.*;
 import uade.edu.guides.mapper.BookMapper;
 import uade.edu.guides.repository.*;
 import uade.edu.guides.service.*;
+import uade.edu.guides.service.notifications.Notificador;
+import uade.edu.guides.service.notifications.adapters.FireBase;
+import uade.edu.guides.service.notifications.adapters.JavaMail;
+import uade.edu.guides.service.notifications.strategies.NotificacionMail;
+import uade.edu.guides.service.notifications.strategies.NotificacionPush;
 import uade.edu.guides.service.state.*;
 
 @Service
@@ -35,9 +40,14 @@ public class BookServiceImpl implements BookService {
     private final IBookStatus confirmedStatus;
     private final IBookStatus cancelledStatus;
 
+    private final Notificador notificador;
+    private static final Double signPercent = 0.10; 
+    private static final Double recharge = 0.5; //50%
+
+
     @Override
     public void changeStatus(Book book, IBookStatus status) {
-        status.sendTouristNotification(book);
+        sendTouristNotification(book,status);
         book.setStatus(status.getStatus());
     }
 
@@ -48,17 +58,25 @@ public class BookServiceImpl implements BookService {
 
         Trip newTrip = buildTrip(dto);
 
+
         if (newTrip != null) {
             Book newBook = new Book();
 
             newBook.setTrip(newTrip);
             newBook.setTourist(tourist);
+            newBook.setSignPayment(calculateSign(newTrip));
             changeStatus(newBook, pendingStatus);
+            sendGuideNotification(repository.save(newBook));
+            facturaService.createFactura(newBook, tourist);
 
-            return mapper.toBookDTO(repository.save(newBook));
+            return mapper.toBookDTO(newBook);
         }
 
         throw new IllegalStateException("Se produjo un error al crear la reserva.");
+    }
+
+    private Double calculateSign(Trip trip){
+        return trip.getService().getPrice()*signPercent;
     }
 
     private Trip buildTrip(CreateBookDTO dto) {
@@ -131,13 +149,37 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void cancelBook(Long id) {
+    public void cancelBook(Long id, Long profileId) {
         Book book = repository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
 
+        if(touristCancell(profileId))
+        {
+            addRecharge(book);
+        }
         changeStatus(book, cancelledStatus);
 
         repository.save(book);
+    }
+
+    private Boolean touristCancell(Long profileId){
+        Profile profile = profileRepository.findProfileByID(profileId);
+        return profile instanceof Tourist;
+    }
+
+    private Double addRecharge(Book book){
+        Double amountRecharge = 0.0;
+
+        if(LocalDate.now().isEqual(book.getTrip().getStartDate()) || LocalDate.now().isAfter(book.getTrip().getStartDate()))
+        {
+            amountRecharge  = 1.0;
+        }
+        if(book.getStatus().equals("CONFIRMED"))
+        {
+            amountRecharge = recharge;
+        }
+
+        return amountRecharge;
     }
 
     @Override
@@ -156,22 +198,22 @@ public class BookServiceImpl implements BookService {
         return new ArrayList<>();
     }
 
-    @Override
-    public void sendGuideNotification(Book book) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendGuideNotification'");
+    private void sendGuideNotification(Book book) {
+        NotificacionDTO notif = new NotificacionDTO();
+        notif.setReceptor(book.getTrip().getGuide());
+        notif.setDescripcion("Se creo una Reseva " + book.getId() + " por el turista " + book.getTourist().getUsername());
+        notificador.setNotif(new NotificacionMail(new JavaMail()));
+        notificador.enviarNotificacion(notif);
+        notificador.setNotif(new NotificacionPush(new FireBase()));
+        notificador.enviarNotificacion(notif);
+        
     }
 
     @Override
-    public void sendTouristNotification(Book book) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendTouristNotification'");
+    public void sendTouristNotification(Book book,IBookStatus status) {
+        status.sendTouristNotification(book);
     }
 
-    @Override
-    public FacturaDTO getFacturaByBookId(Long bookId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFacturaByBookId'");
-    }
+
 
 }

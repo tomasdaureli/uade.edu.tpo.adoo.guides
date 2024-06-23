@@ -24,8 +24,10 @@ public class Factura {
     @JoinColumn(name = "profile_id")
     private Tourist turista;
 
-    private Double comision;
+    private Double comision = 1.05;
 
     private Double total;
+
+    private Double pendiente;
 
 }

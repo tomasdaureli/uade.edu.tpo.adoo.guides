@@ -61,6 +61,8 @@ public class ProfileServiceImpl implements ProfileService {
             profile = profileMapper.toTourist(dto);
         }
 
+        profile.setAutenticacion(dto.getAuthType().toString());
+
         Profile savedProfile = repository.save(profile);
 
         this.cambiarEstrategiaAutenticacion(savedProfile.getId(),

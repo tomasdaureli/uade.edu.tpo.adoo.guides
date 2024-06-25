@@ -5,29 +5,35 @@ import java.util.Random;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import uade.edu.guides.domain.ProfileResponseDTO;
+import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.service.auth.IAdapterAutenticacionExterna;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
-@Component
+@Component("EXTERNAL")
 @RequiredArgsConstructor
 public class AutenticacionExterna implements IEstrategiaAutenticacion {
 
-    private IAdapterAutenticacionExterna autenticacionExterna;
+    private final IAdapterAutenticacionExterna appleAdapter;
+    private final IAdapterAutenticacionExterna facebookAdapter;
+    private final IAdapterAutenticacionExterna googleAdapter;
 
     @Override
-    public void autenticarUsuario(ProfileResponseDTO dto) {
-        System.out.println("Autenticacion Externa: ");
+    public Boolean autenticarUsuario(AuthenticateUserDTO dto) {
         Random random = new Random();
-        int randomNumber = random.nextInt(2);
+        int randomNumber = random.nextInt(3);
         switch (randomNumber) {
             case 0:
-                System.out.println("Autenticacion Completada!");
+                return appleAdapter.autenticarUsuario(dto);
             case 1:
-                System.out.println("Error en la Autenticacion");
+                return facebookAdapter.autenticarUsuario(dto);
             default:
-                throw new IllegalStateException("Número aleatorio fuera de rango");
+                return googleAdapter.autenticarUsuario(dto);
         }
+    }
+
+    @Override
+    public String getAutenticacion() {
+        return "EXTERNAL";
     }
 
 }

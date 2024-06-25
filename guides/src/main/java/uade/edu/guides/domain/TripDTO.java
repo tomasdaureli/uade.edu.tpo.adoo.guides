@@ -17,4 +17,8 @@ public class TripDTO {
 
     private LocalDate endDate;
 
+    private ProfileResponseDTO guide;
+
+    private ServiceDTO service;
+
 }

@@ -26,4 +26,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     Profile findProfileById(Long id);
 
+    Optional<Profile> findByEmail(String email);
+
 }

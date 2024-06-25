@@ -11,7 +11,7 @@ import uade.edu.guides.service.notifications.adapters.JavaMail;
 import uade.edu.guides.service.notifications.strategies.NotificacionMail;
 import uade.edu.guides.service.notifications.strategies.NotificacionPush;
 
-@Component("confirmedStatus")
+@Component("CONFIRMED")
 @RequiredArgsConstructor
 public class Confirmed implements IBookStatus {
 

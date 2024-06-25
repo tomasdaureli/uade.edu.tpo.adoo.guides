@@ -4,6 +4,6 @@ import uade.edu.guides.domain.AuthenticateUserDTO;
 
 public interface IAdapterAutenticacionExterna {
 
-    void autenticarUsuario(AuthenticateUserDTO dto);
+    Boolean autenticarUsuario(AuthenticateUserDTO dto);
 
 }

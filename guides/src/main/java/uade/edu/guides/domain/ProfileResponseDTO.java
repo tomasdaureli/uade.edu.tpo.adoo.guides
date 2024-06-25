@@ -26,7 +26,6 @@ public class ProfileResponseDTO {
     private String email;
     private String phoneNumber;
     private String username;
-    private String password;
     private List<TripDTO> historyTrips;
     private String credentialId;
     private String photoId;

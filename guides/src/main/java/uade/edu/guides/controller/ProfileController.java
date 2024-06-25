@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.domain.CreateProfileDTO;
 import uade.edu.guides.domain.GuideAdditionalDataDTO;
 import uade.edu.guides.domain.GuideUpdateServicesDTO;
+import uade.edu.guides.domain.PaymentTypeDTO;
 import uade.edu.guides.domain.ProfileResponseDTO;
 import uade.edu.guides.domain.ReviewDTO;
 import uade.edu.guides.domain.TrophyDTO;
@@ -42,6 +45,12 @@ public class ProfileController {
     public ProfileResponseDTO createUser(
             @RequestBody CreateProfileDTO dto) {
         return profileService.createUser(dto);
+    }
+
+    @PostMapping("/auth")
+    public ProfileResponseDTO autenticarUsuario(
+            @Valid @RequestBody AuthenticateUserDTO authDto) {
+        return profileService.autenticarUsuario(authDto);
     }
 
     @PatchMapping("/{profileId}")
@@ -76,17 +85,18 @@ public class ProfileController {
         return guideService.updateServices(guideId, dto);
     }
 
-    @PostMapping("/guides/reviews/{guideId}")
+    @PostMapping("/guides/reviews/{guideId}/{touristId}")
     public void addReview(
             @PathVariable Long guideId,
-            @RequestBody ReviewDTO review) {
-        guideService.addReview(guideId, review);
+            @RequestBody ReviewDTO review,
+            @PathVariable Long touristId) {
+        profileService.createReview(guideId, review, touristId);
     }
 
-    @GetMapping("/guides/trophies/{guideId}")
+    @GetMapping("/guides/trophies/{profileId}")
     public List<TrophyDTO> getAllTrophies(
-            @PathVariable Long guideId) {
-        return guideService.getAllTrophies(guideId);
+            @PathVariable Long profileId) {
+        return profileService.getAllTrophies(profileId);
     }
 
     @GetMapping("/tourists/{touristId}")
@@ -95,11 +105,12 @@ public class ProfileController {
         return touristService.getTouristById(touristId);
     }
 
-    @GetMapping("/tourists/{touristId}/payment/{bookId}")
+    @PostMapping("/tourists/{touristId}/payment/{bookId}")
     public void getTouristById(
             @PathVariable Long touristId,
-            @PathVariable Long bookId) {
-        touristService.realizarPago(touristId, bookId);
+            @PathVariable Long bookId,
+            @RequestParam(required = true) PaymentTypeDTO pay) {
+        touristService.realizarPago(touristId, bookId, pay);
     }
 
 }

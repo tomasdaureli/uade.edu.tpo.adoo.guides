@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import uade.edu.guides.exception.*;
 import uade.edu.guides.mapper.BookMapper;
 import uade.edu.guides.repository.*;
 import uade.edu.guides.service.*;
+import uade.edu.guides.service.chat.IAdapterSendBird;
 import uade.edu.guides.service.notifications.Notificador;
 import uade.edu.guides.service.notifications.adapters.FireBase;
 import uade.edu.guides.service.notifications.adapters.JavaMail;
@@ -38,11 +40,12 @@ public class BookServiceImpl implements BookService {
 
     private final TripRepository tripRepository;
 
-    private final IBookStatus pendingStatus;
-    private final IBookStatus confirmedStatus;
-    private final IBookStatus cancelledStatus;
-
     private final Notificador notificador;
+
+    private final IAdapterSendBird sendBird;
+
+    private final ApplicationContext context;
+
     private static final Double SIGN_PERCENT = 0.10;
     private static final Double RECHARGE = 0.5; // 50%
     private static final Long DAYS_TO_REVIEW = 4L;
@@ -66,7 +69,7 @@ public class BookServiceImpl implements BookService {
             newBook.setTrip(newTrip);
             newBook.setTourist(tourist);
             newBook.setSignPayment(calculateSign(newTrip));
-            changeStatus(newBook, pendingStatus);
+            changeStatus(newBook, getCurrentStatus("PENDING"));
             sendGuideNotification(repository.save(newBook));
             facturaService.createFactura(newBook, tourist);
 
@@ -141,13 +144,24 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void acceptBook(Long id) {
+    public void acceptBook(Long id, Long profileId) {
         Book book = repository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
 
-        changeStatus(book, confirmedStatus);
+        if (Boolean.TRUE.equals(guideAccept(profileId))) {
+            getCurrentStatus(book.getStatus()).acceptBook(book);
+            changeStatus(book, getCurrentStatus(book.getStatus()));
+            sendBird.enableChat(book);
+        } else {
+            throw new RuntimeException("No tienes permisos para realizar esta accion");
+        }
 
         repository.save(book);
+    }
+
+    private Boolean guideAccept(Long profileId) {
+        Profile profile = profileRepository.findProfileById(profileId);
+        return profile instanceof Guide;
     }
 
     @Override
@@ -158,7 +172,8 @@ public class BookServiceImpl implements BookService {
         if (Boolean.TRUE.equals(touristCancell(profileId))) {
             facturaService.updateFactura(book, addRecharge(book));
         }
-        changeStatus(book, cancelledStatus);
+        getCurrentStatus(book.getStatus()).cancelBook(book);
+        changeStatus(book, getCurrentStatus(book.getStatus()));
 
         repository.save(book);
     }
@@ -232,9 +247,27 @@ public class BookServiceImpl implements BookService {
                 notificador.cambiarEstrategiaNotif(new NotificacionPush(new FireBase()));
                 notificador.enviarNotificacion(notif);
             }
-
         }
+    }
 
+    @Transactional
+    @Scheduled(cron = "0 26 0 * * ?")
+    protected void finishTrip() {
+        LocalDate date = LocalDate.now().minusDays(1);
+        List<Book> endedBooks = repository.findByTripEndDateBefore(date);
+        for (Book b : endedBooks) {
+            NotificacionDTO notif = new NotificacionDTO();
+            notif.setReceptor(b.getTourist());
+            notif.setDescripcion(String.format(
+                    "La reserva Nº %s ha finalizado, le enviamos la factura del viaje al siguiente mail %s. Muchas Gracias!",
+                    b.getId(), b.getTourist().getEmail()));
+            notificador.cambiarEstrategiaNotif(new NotificacionMail(new JavaMail()));
+            notificador.enviarNotificacion(notif);
+        }
+    }
+
+    private IBookStatus getCurrentStatus(String status) {
+        return (IBookStatus) context.getBean(status);
     }
 
 }

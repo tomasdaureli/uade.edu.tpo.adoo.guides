@@ -109,5 +109,8 @@ CREATE TABLE guides_cities (
     FOREIGN KEY (profile_id) REFERENCES profiles (id)
 );
 
-ALTER TABLE facturas
-ADD COLUMN pendiente DOUBLE;
+ALTER TABLE facturas ADD COLUMN pendiente DOUBLE;
+
+ALTER TABLE `profiles` ADD COLUMN `autenticacion` VARCHAR(255);
+
+ALTER TABLE `profiles` ADD COLUMN `total_reviews` INT;

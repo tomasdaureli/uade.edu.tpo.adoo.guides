@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.TrophyDTO;
-import uade.edu.guides.entity.Guide;
+import uade.edu.guides.entity.Profile;
 import uade.edu.guides.entity.Trophy;
 import uade.edu.guides.mapper.ProfileMapper;
 import uade.edu.guides.repository.ProfileRepository;
@@ -21,20 +21,20 @@ public class ObservadorTrofeos implements IObserver {
     private final ProfileMapper mapper;
 
     @Override
-    public void addTrophyGuide(Guide guide, TrophyDTO trophyDto) {
+    public void addTrophyProfile(Profile profile, TrophyDTO trophyDto) {
         Trophy newTrophy = mapper.toTrophy(trophyDto);
-        newTrophy.setGuide(guide);
+        newTrophy.setProfile(profile);
 
-        List<Trophy> trophies = guide.getTrophies();
+        List<Trophy> trophies = profile.getTrophies();
 
         if (trophies == null) {
             trophies = new ArrayList<>();
-            guide.setTrophies(trophies);
+            profile.setTrophies(trophies);
         }
 
         trophies.add(newTrophy);
 
-        profileRepository.save(guide);
+        profileRepository.save(profile);
     }
 
 }

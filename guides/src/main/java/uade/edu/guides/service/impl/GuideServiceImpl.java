@@ -18,10 +18,6 @@ import uade.edu.guides.repository.ProfileRepository;
 import uade.edu.guides.repository.TourismServiceRepository;
 import uade.edu.guides.service.GuideService;
 import uade.edu.guides.service.credent.IAdapterIA;
-import uade.edu.guides.service.notifications.Notificador;
-import uade.edu.guides.service.observ.IObserver;
-import uade.edu.guides.service.observ.ObservadorNotificacion;
-import uade.edu.guides.service.observ.ObservadorTrofeos;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +31,12 @@ public class GuideServiceImpl implements GuideService {
 
     private final IAdapterIA adapterIa;
 
-    private List<IObserver> listObservers = new ArrayList<>();
-
     @Override
     public ProfileResponseDTO addAdditionalDataForGuide(Long guideId, GuideAdditionalDataDTO dto) {
         Guide guide = profileRepository.findGuideById(guideId)
                 .orElseThrow(GuideNotFoundException::new);
+
+        verifyCredential(dto.getCredentialId());
 
         return mapper.toProfileResponseDTO(
                 profileRepository.save(
@@ -88,10 +84,7 @@ public class GuideServiceImpl implements GuideService {
 
     }
 
-    public void addReview(Long guideId, ReviewDTO reviewDto) {
-        Guide guide = profileRepository.findGuideById(guideId)
-                .orElseThrow(GuideNotFoundException::new);
-
+    public void addReview(Guide guide, ReviewDTO reviewDto) {
         Review newReview = mapper.toReview(reviewDto);
         newReview.setGuide(guide);
 
@@ -106,28 +99,6 @@ public class GuideServiceImpl implements GuideService {
         guide.setScore(calculateScore(profileRepository.save(guide)));
 
         profileRepository.save(guide);
-
-        if (guide.getScore() >= 4.5
-                && guide.getReviews().size() >= 10) {
-            addTrophy(guide, new TrophyDTO(TrophyTypeDTO.SUCCESS));
-        }
-    }
-
-    public void addTrophy(Guide guide, TrophyDTO trophyDto) {
-        attach(new ObservadorNotificacion(new Notificador()));
-        attach(new ObservadorTrofeos(profileRepository, mapper));
-        listObservers.forEach(o -> o.addTrophyGuide(guide, trophyDto));
-    }
-
-    public List<TrophyDTO> getAllTrophies(Long guideId) {
-        Guide guide = profileRepository.findGuideById(guideId)
-                .orElseThrow(GuideNotFoundException::new);
-
-        List<Trophy> listTrophies = guide.getTrophies();
-
-        return listTrophies.stream()
-                .map(mapper::toTrophyDTO)
-                .collect(Collectors.toList());
     }
 
     public Boolean verifyCredential(String credentialId) {
@@ -144,16 +115,6 @@ public class GuideServiceImpl implements GuideService {
         }
 
         return totalScore;
-    }
-
-    @Override
-    public void attach(IObserver observer) {
-        listObservers.add(observer);
-    }
-
-    @Override
-    public void detach(IObserver observer) {
-        listObservers.remove(observer);
     }
 
 }

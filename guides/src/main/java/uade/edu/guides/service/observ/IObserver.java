@@ -1,10 +1,10 @@
 package uade.edu.guides.service.observ;
 
 import uade.edu.guides.domain.TrophyDTO;
-import uade.edu.guides.entity.Guide;
+import uade.edu.guides.entity.Profile;
 
 public interface IObserver {
 
-    void addTrophyGuide(Guide guide, TrophyDTO trophyDto);
+    void addTrophyProfile(Profile profile, TrophyDTO trophyDto);
 
 }

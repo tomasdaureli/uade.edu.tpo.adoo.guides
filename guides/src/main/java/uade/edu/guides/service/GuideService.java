@@ -4,7 +4,6 @@ import java.util.List;
 
 import uade.edu.guides.domain.*;
 import uade.edu.guides.entity.Guide;
-import uade.edu.guides.service.observ.IObserver;
 
 public interface GuideService {
 
@@ -16,14 +15,6 @@ public interface GuideService {
 
     ProfileResponseDTO updateServices(Long guideId, GuideUpdateServicesDTO servicesDto);
 
-    void addReview(Long guideId, ReviewDTO review);
-
-    void addTrophy(Guide guide, TrophyDTO trophy);
-
-    void attach(IObserver observer);
-
-    void detach(IObserver observer);
-
-    List<TrophyDTO> getAllTrophies(Long guideId);
+    void addReview(Guide guide, ReviewDTO review);
 
 }

@@ -22,6 +22,6 @@ public class Trophy {
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
-    private Guide guide;
+    private Profile profile;
 
 }

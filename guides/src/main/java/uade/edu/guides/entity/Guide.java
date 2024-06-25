@@ -34,9 +34,6 @@ public class Guide extends Profile {
 
     private Double score;
 
-    @OneToMany(mappedBy = "guide", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Trophy> trophies;
-
     private Boolean booked;
 
     @ElementCollection

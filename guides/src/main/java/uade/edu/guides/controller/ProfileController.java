@@ -85,17 +85,18 @@ public class ProfileController {
         return guideService.updateServices(guideId, dto);
     }
 
-    @PostMapping("/guides/reviews/{guideId}")
+    @PostMapping("/guides/reviews/{guideId}/{touristId}")
     public void addReview(
             @PathVariable Long guideId,
-            @RequestBody ReviewDTO review) {
-        guideService.addReview(guideId, review);
+            @RequestBody ReviewDTO review,
+            @PathVariable Long touristId) {
+        profileService.createReview(guideId, review, touristId);
     }
 
-    @GetMapping("/guides/trophies/{guideId}")
+    @GetMapping("/guides/trophies/{profileId}")
     public List<TrophyDTO> getAllTrophies(
-            @PathVariable Long guideId) {
-        return guideService.getAllTrophies(guideId);
+            @PathVariable Long profileId) {
+        return profileService.getAllTrophies(profileId);
     }
 
     @GetMapping("/tourists/{touristId}")

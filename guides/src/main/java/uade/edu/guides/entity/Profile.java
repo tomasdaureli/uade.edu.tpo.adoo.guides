@@ -25,6 +25,8 @@ public abstract class Profile {
     private String password;
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Trip> historyTrips;
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Trophy> trophies;
     private String autenticacion;
 
 }

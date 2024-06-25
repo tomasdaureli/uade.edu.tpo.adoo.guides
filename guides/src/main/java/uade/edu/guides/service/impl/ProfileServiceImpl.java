@@ -1,5 +1,6 @@
 package uade.edu.guides.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,12 +9,22 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.*;
+import uade.edu.guides.entity.Guide;
 import uade.edu.guides.entity.Profile;
+import uade.edu.guides.entity.Tourist;
+import uade.edu.guides.entity.Trophy;
+import uade.edu.guides.exception.GuideNotFoundException;
 import uade.edu.guides.exception.ProfileNotFoundException;
 import uade.edu.guides.mapper.ProfileMapper;
 import uade.edu.guides.repository.ProfileRepository;
+import uade.edu.guides.service.GuideService;
 import uade.edu.guides.service.ProfileService;
+import uade.edu.guides.service.TouristService;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
+import uade.edu.guides.service.notifications.Notificador;
+import uade.edu.guides.service.observ.IObserver;
+import uade.edu.guides.service.observ.ObservadorNotificacion;
+import uade.edu.guides.service.observ.ObservadorTrofeos;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +34,13 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileMapper profileMapper;
 
+    private final GuideService guideService;
+
+    private final TouristService touristService;
+
     private final ApplicationContext context;
+
+    private List<IObserver> listObservers = new ArrayList<>();
 
     @Override
     public List<ProfileResponseDTO> getAllProfiles() {
@@ -88,4 +105,59 @@ public class ProfileServiceImpl implements ProfileService {
     private IEstrategiaAutenticacion getCurrentEstrategiaAuth(String estrategia) {
         return (IEstrategiaAutenticacion) context.getBean(estrategia);
     }
+
+    public void createReview(Long guideId, ReviewDTO reviewDto, Long touristId) {
+        Guide guide = (Guide) repository.findById(guideId)
+                .orElseThrow(GuideNotFoundException::new);
+        Tourist tourist = (Tourist) repository.findById(touristId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        guideService.addReview(guide, reviewDto);
+        touristService.increaseReviews(tourist);
+
+        if (Boolean.TRUE.equals(isTouristValidToAssignTrophy(tourist))) {
+            addTrophy(tourist, new TrophyDTO(TrophyTypeDTO.REVIEW));
+        }
+        if (Boolean.TRUE.equals(isGuideValidToAssignTrophy(guide))) {
+            addTrophy(guide, new TrophyDTO(TrophyTypeDTO.SUCCESS));
+        }
+    }
+
+    private Boolean isTouristValidToAssignTrophy(Tourist tourist) {
+        return tourist.getTotalReviews() >= 10;
+    }
+
+    private Boolean isGuideValidToAssignTrophy(Guide guide) {
+        return (guide.getScore() >= 4.5)
+                && (guide.getReviews().size() >= 10);
+    }
+
+    @Override
+    public void addTrophy(Profile profile, TrophyDTO trophyDto) {
+        attach(new ObservadorNotificacion(new Notificador()));
+        attach(new ObservadorTrofeos(repository, profileMapper));
+        listObservers.forEach(o -> o.addTrophyProfile(profile, trophyDto));
+    }
+
+    public List<TrophyDTO> getAllTrophies(Long profileId) {
+        Profile profile = repository.findById(profileId)
+                .orElseThrow(ProfileNotFoundException::new);
+
+        List<Trophy> listTrophies = profile.getTrophies();
+
+        return listTrophies.stream()
+                .map(profileMapper::toTrophyDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void attach(IObserver observer) {
+        listObservers.add(observer);
+    }
+
+    @Override
+    public void detach(IObserver observer) {
+        listObservers.remove(observer);
+    }
+
 }

@@ -15,6 +15,8 @@ import uade.edu.guides.service.tourist.IAdapterPago;
 @DiscriminatorValue("tourist")
 public class Tourist extends Profile {
 
+    private Integer totalReviews;
+
     @Transient
     private IAdapterPago adatperPago;
 

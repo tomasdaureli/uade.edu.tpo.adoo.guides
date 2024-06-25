@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
-@Component("autenticacionLocal")
+@Component("INTERNAL")
 public class AutenticacionLocal implements IEstrategiaAutenticacion {
 
     @Override

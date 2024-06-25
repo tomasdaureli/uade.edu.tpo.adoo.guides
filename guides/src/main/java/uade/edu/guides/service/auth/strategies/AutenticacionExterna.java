@@ -2,7 +2,6 @@ package uade.edu.guides.service.auth.strategies;
 
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,7 @@ import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.service.auth.IAdapterAutenticacionExterna;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
-@Component("autenticacionExterna")
+@Component("EXTERNAL")
 @RequiredArgsConstructor
 public class AutenticacionExterna implements IEstrategiaAutenticacion {
 
@@ -21,7 +20,7 @@ public class AutenticacionExterna implements IEstrategiaAutenticacion {
     @Override
     public Boolean autenticarUsuario(AuthenticateUserDTO dto) {
         Random random = new Random();
-        int randomNumber = random.nextInt(2);
+        int randomNumber = random.nextInt(3);
         switch (randomNumber) {
             case 0:
                 return appleAdapter.autenticarUsuario(dto);

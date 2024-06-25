@@ -11,7 +11,7 @@ import uade.edu.guides.service.notifications.adapters.FireBase;
 import uade.edu.guides.service.notifications.strategies.NotificacionMail;
 import uade.edu.guides.service.notifications.strategies.NotificacionPush;
 
-@Component("pendingStatus")
+@Component("PENDING")
 @RequiredArgsConstructor
 public class Pending implements IBookStatus {
 

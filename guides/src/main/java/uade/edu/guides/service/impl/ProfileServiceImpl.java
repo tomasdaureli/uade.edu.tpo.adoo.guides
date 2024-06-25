@@ -3,6 +3,7 @@ package uade.edu.guides.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileMapper profileMapper;
 
-    private final IEstrategiaAutenticacion autenticacionExterna;
-    private final IEstrategiaAutenticacion autenticacionLocal;
+    private final ApplicationContext context;
 
     @Override
     public List<ProfileResponseDTO> getAllProfiles() {
@@ -46,11 +46,8 @@ public class ProfileServiceImpl implements ProfileService {
 
         Profile savedProfile = repository.save(profile);
 
-        if (AuthTypeDTO.INTERNAL.equals(dto.getAuthType())) {
-            this.cambiarEstrategiaAutenticacion(savedProfile.getId(), autenticacionLocal);
-        } else {
-            this.cambiarEstrategiaAutenticacion(savedProfile.getId(), autenticacionExterna);
-        }
+        this.cambiarEstrategiaAutenticacion(savedProfile.getId(),
+                getCurrentEstrategiaAuth(savedProfile.getAutenticacion()));
 
         return profileMapper.toProfileResponseDTO(savedProfile);
     }
@@ -70,14 +67,9 @@ public class ProfileServiceImpl implements ProfileService {
         Profile profile = repository.findByEmail(authDto.getEmail())
                 .orElseThrow(ProfileNotFoundException::new);
 
-        if (AuthTypeDTO.INTERNAL.equals(AuthTypeDTO.valueOf(profile.getAutenticacion()))
-                && Boolean.TRUE.equals(
-                        autenticacionLocal.autenticarUsuario(authDto))) {
+        if (Boolean.TRUE.equals(getCurrentEstrategiaAuth(
+                profile.getAutenticacion()).autenticarUsuario(authDto))) {
             return profileMapper.toProfileResponseDTO(profile);
-        } else {
-            if (Boolean.TRUE.equals(autenticacionExterna.autenticarUsuario(authDto))) {
-                return profileMapper.toProfileResponseDTO(profile);
-            }
         }
 
         throw new IllegalStateException("Mail o contraseña incorrectos.");
@@ -91,5 +83,9 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setAutenticacion(estrategia.getAutenticacion());
 
         repository.save(profile);
+    }
+
+    private IEstrategiaAutenticacion getCurrentEstrategiaAuth(String estrategia) {
+        return (IEstrategiaAutenticacion) context.getBean(estrategia);
     }
 }

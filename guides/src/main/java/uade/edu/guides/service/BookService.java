@@ -11,11 +11,11 @@ public interface BookService {
 
     BookDTO createBook(CreateBookDTO dto);
 
-    void acceptBook(Long id);
+    void acceptBook(Long id, Long profileId);
 
     void changeStatus(Book book, IBookStatus status);
 
-    void sendTouristNotification(Book book,IBookStatus status);
+    void sendTouristNotification(Book book, IBookStatus status);
 
     List<BookDTO> getAllBooks();
 
@@ -23,6 +23,6 @@ public interface BookService {
 
     BookDTO getBookById(Long id);
 
-    void cancelBook(Long id,Long profileId);
+    void cancelBook(Long id, Long profileId);
 
 }

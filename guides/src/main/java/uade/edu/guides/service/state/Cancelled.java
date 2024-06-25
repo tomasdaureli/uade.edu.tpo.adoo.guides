@@ -11,7 +11,7 @@ import uade.edu.guides.service.notifications.adapters.JavaMail;
 import uade.edu.guides.service.notifications.strategies.NotificacionMail;
 import uade.edu.guides.service.notifications.strategies.NotificacionPush;
 
-@Component("cancelledStatus")
+@Component("CANCELLED")
 @RequiredArgsConstructor
 public class Cancelled implements IBookStatus {
 

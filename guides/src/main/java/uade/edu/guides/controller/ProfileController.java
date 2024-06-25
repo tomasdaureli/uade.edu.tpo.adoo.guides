@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.domain.CreateProfileDTO;
 import uade.edu.guides.domain.GuideAdditionalDataDTO;
 import uade.edu.guides.domain.GuideUpdateServicesDTO;
+import uade.edu.guides.domain.PaymentTypeDTO;
 import uade.edu.guides.domain.ProfileResponseDTO;
 import uade.edu.guides.domain.ReviewDTO;
 import uade.edu.guides.domain.TrophyDTO;
@@ -102,11 +104,12 @@ public class ProfileController {
         return touristService.getTouristById(touristId);
     }
 
-    @GetMapping("/tourists/{touristId}/payment/{bookId}")
+    @PostMapping("/tourists/{touristId}/payment/{bookId}")
     public void getTouristById(
             @PathVariable Long touristId,
-            @PathVariable Long bookId) {
-        touristService.realizarPago(touristId, bookId);
+            @PathVariable Long bookId,
+            @RequestParam(required = true) PaymentTypeDTO pay) {
+        touristService.realizarPago(touristId, bookId, pay);
     }
 
 }

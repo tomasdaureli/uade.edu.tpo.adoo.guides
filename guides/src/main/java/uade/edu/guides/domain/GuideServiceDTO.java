@@ -11,18 +11,14 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServiceDTO {
+public class GuideServiceDTO {
 
     private Long id;
 
     private String name;
 
-    private ServiceTypeDTO type;
+    private String lastName;
 
-    private LanguageDTO language;
-
-    private Double price;
-
-    private List<GuideServiceDTO> guides;
+    private List<String> cities;
 
 }

@@ -43,10 +43,11 @@ public class BookController {
         return service.getBookById(bookId);
     }
 
-    @PatchMapping("/accept/{bookId}")
+    @PatchMapping("/accept/{bookId}/{profileId}")
     public void acceptBook(
-            @PathVariable Long bookId) {
-        service.acceptBook(bookId);
+            @PathVariable Long bookId,
+            @PathVariable Long profileId) {
+        service.acceptBook(bookId, profileId);
     }
 
     @PatchMapping("/cancel/{bookId}/{profileId}")

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.domain.CreateProfileDTO;
 import uade.edu.guides.domain.GuideAdditionalDataDTO;
 import uade.edu.guides.domain.GuideUpdateServicesDTO;
@@ -42,6 +43,12 @@ public class ProfileController {
     public ProfileResponseDTO createUser(
             @RequestBody CreateProfileDTO dto) {
         return profileService.createUser(dto);
+    }
+
+    @PostMapping("/auth")
+    public ProfileResponseDTO autenticarUsuario(
+            @Valid @RequestBody AuthenticateUserDTO authDto) {
+        return profileService.autenticarUsuario(authDto);
     }
 
     @PatchMapping("/{profileId}")

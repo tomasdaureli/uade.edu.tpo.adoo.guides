@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
 @Data
 @Entity(name = "profiles")
@@ -26,7 +25,6 @@ public abstract class Profile {
     private String password;
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Trip> historyTrips;
-    @Transient
-    private IEstrategiaAutenticacion autenticacion;
+    private String autenticacion;
 
 }

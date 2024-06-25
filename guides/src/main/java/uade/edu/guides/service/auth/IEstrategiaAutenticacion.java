@@ -1,9 +1,11 @@
 package uade.edu.guides.service.auth;
 
-import uade.edu.guides.domain.ProfileResponseDTO;
+import uade.edu.guides.domain.AuthenticateUserDTO;
 
 public interface IEstrategiaAutenticacion {
 
-    void autenticarUsuario(ProfileResponseDTO dto);
+    Boolean autenticarUsuario(AuthenticateUserDTO dto);
+
+    String getAutenticacion();
 
 }

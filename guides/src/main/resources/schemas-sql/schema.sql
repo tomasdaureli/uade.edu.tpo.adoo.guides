@@ -111,3 +111,6 @@ CREATE TABLE guides_cities (
 
 ALTER TABLE facturas
 ADD COLUMN pendiente DOUBLE;
+
+ALTER TABLE `profiles`
+ADD COLUMN `autenticacion` VARCHAR(255);

@@ -4,25 +4,29 @@ import java.util.Random;
 
 import org.springframework.stereotype.Component;
 
-import uade.edu.guides.domain.ProfileResponseDTO;
+import uade.edu.guides.domain.AuthenticateUserDTO;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
 
-@Component
+@Component("autenticacionLocal")
 public class AutenticacionLocal implements IEstrategiaAutenticacion {
 
     @Override
-    public void autenticarUsuario(ProfileResponseDTO dto) {
-        System.out.println("Autenticacion Local: ");
+    public Boolean autenticarUsuario(AuthenticateUserDTO dto) {
         Random random = new Random();
         int randomNumber = random.nextInt(2);
         switch (randomNumber) {
             case 0:
-                System.out.println("Autenticacion Completada!");
+                return true;
             case 1:
-                System.out.println("Error en la Autenticacion");
+                return false;
             default:
                 throw new IllegalStateException("Número aleatorio fuera de rango");
         }
+    }
+
+    @Override
+    public String getAutenticacion() {
+        return "INTERNAL";
     }
 
 }

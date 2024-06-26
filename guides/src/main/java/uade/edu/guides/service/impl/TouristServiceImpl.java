@@ -62,6 +62,7 @@ public class TouristServiceImpl implements TouristService {
     @Override
     public void increaseReviews(Tourist tourist) {
         tourist.setTotalReviews(tourist.getTotalReviews() + 1);
+        profileRepository.save(tourist);
     }
 
 }

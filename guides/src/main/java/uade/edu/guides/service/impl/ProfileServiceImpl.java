@@ -1,12 +1,9 @@
 package uade.edu.guides.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import uade.edu.guides.domain.*;
 import uade.edu.guides.entity.Guide;
@@ -21,12 +18,8 @@ import uade.edu.guides.service.GuideService;
 import uade.edu.guides.service.ProfileService;
 import uade.edu.guides.service.TouristService;
 import uade.edu.guides.service.auth.IEstrategiaAutenticacion;
-import uade.edu.guides.service.notifications.Notificador;
 import uade.edu.guides.service.observ.IObserver;
-import uade.edu.guides.service.observ.ObservadorNotificacion;
-import uade.edu.guides.service.observ.ObservadorTrofeos;
 
-@Service
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
@@ -40,7 +33,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ApplicationContext context;
 
-    private List<IObserver> listObservers = new ArrayList<>();
+    private final List<IObserver> listObservers;
 
     @Override
     public List<ProfileResponseDTO> getAllProfiles() {
@@ -136,8 +129,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public void addTrophy(Profile profile, TrophyDTO trophyDto) {
-        attach(new ObservadorNotificacion(new Notificador()));
-        attach(new ObservadorTrofeos(repository, profileMapper));
         listObservers.forEach(o -> o.addTrophyProfile(profile, trophyDto));
     }
 

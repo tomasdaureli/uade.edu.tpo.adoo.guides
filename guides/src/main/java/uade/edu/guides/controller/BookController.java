@@ -63,7 +63,7 @@ public class BookController {
         return facturaService.getFacturaByBook(bookId);
     }
 
-    @GetMapping("/{touristId}")
+    @GetMapping("/{touristId}/tourist")
     public List<BookDTO> getBooksByTourist(
             @PathVariable Long touristId) {
         return service.getBooksByTourist(touristId);
